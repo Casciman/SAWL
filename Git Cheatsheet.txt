@@ -1,0 +1,93 @@
+Here you go — a practical Git/GitHub cheat sheet you can keep in your repo as GIT_CHEATSHEET.txt.
+
+SETUP (one-time)
+	•	Init repo (new):
+git init
+git add .
+git commit -m “Initial commit”
+	•	Connect to GitHub (after creating repo on GitHub):
+git branch -M main
+git remote add origin git@github.com:USER/REPO.git
+git push -u origin main
+	•	Clone existing repo:
+git clone git@github.com:USER/REPO.git
+cd REPO
+
+DAILY LOOP (the 4 commands that matter)
+	1.	Get latest:
+git pull
+	2.	See what changed:
+git status
+git diff
+	3.	Stage what you intend to commit (be selective):
+git add file1.py file2.py
+(or stage everything you truly want)
+git add .
+	4.	Commit + push:
+git commit -m “One clear sentence about what changed”
+git push
+
+UNDO / FIXES (common saves)
+	•	Unstage a file (keep changes):
+git restore –staged path/to/file
+	•	Discard changes in a file (danger: loses edits):
+git restore path/to/file
+	•	Discard ALL uncommitted changes (danger):
+git restore .
+git clean -fd   (removes untracked files/dirs)
+	•	Amend last commit (change message or include forgotten file):
+git add forgot.py
+git commit –amend
+git push –force-with-lease   (only if you already pushed)
+
+BRANCHING (simple and safe)
+	•	Create a branch and switch:
+git switch -c fix-index-scan
+	•	Switch back to main:
+git switch main
+	•	Merge your branch into main:
+git switch main
+git merge fix-index-scan
+git push
+	•	Delete branch after merge:
+git branch -d fix-index-scan
+
+INSPECTION / HISTORY
+	•	Show commit history (compact):
+git log –oneline –decorate –graph –all | head -n 30
+	•	See what changed in last commit:
+git show
+	•	See who last touched a line:
+git blame file.py
+
+STASH (park work temporarily)
+	•	Save work without committing:
+git stash -u
+	•	Bring it back:
+git stash pop
+
+REMOTE / GITHUB CHECKS
+	•	Show remotes:
+git remote -v
+	•	If push fails due to upstream:
+git push -u origin main
+
+IGNORE FILES (critical for you)
+	•	Edit .gitignore then:
+git add .gitignore
+git commit -m “Ignore local data”
+git push
+
+If you accidentally committed data you meant to ignore:
+	•	Stop tracking but keep files locally:
+git rm -r –cached data/episodes
+git commit -m “Stop tracking episodes data”
+git push
+
+GOLDEN RULES (keep it painless)
+	•	Commit small, coherent changes.
+	•	Never commit big data trees (audio/whisper/hydrated dumps). Keep them local + ignored.
+	•	Use git status before every commit.
+	•	If unsure, stage files explicitly: git add file1 file2 (avoid git add .)
+
+If you want, tell me: do you prefer GitHub via SSH (recommended) or HTTPS? I’ll give you the exact “connect + authenticate” steps for your Macs.
