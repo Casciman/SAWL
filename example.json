@@ -1,0 +1,106 @@
+{
+  "meta": {
+    "episode_id": "E0022",
+    "episode_dir": "E0022-20180112",
+    "date": "2018-01-12",
+    "title": "TITLE HERE",
+    "analysis_version": 1,
+    "generated_at_utc": "2026-02-15T00:00:00Z",
+    "source_model": "MODEL HERE",
+    "transcript_sha256": "SHA256 HERE",
+    "input": {
+      "transcript_relpath": "whisper/fw-base/transcript.txt",
+      "segments_relpath": "whisper/fw-base/segments.json",
+      "timings_relpath": "whisper/fw-base/timings.json",
+      "audio_relpath": "audio/E0022-20180112.mp3"
+    }
+  },
+
+  "summary_compact": [
+    "Bullet 1...",
+    "Bullet 2..."
+  ],
+
+  "summary_full": "A tight ~400–700 word narrative summary that treats the episode as its own chapter.",
+
+  "closing_observations": {
+    "text": "The strongest closing read: what this episode *means*, what it reveals about Scott, what holds up over time.",
+    "personal_scott_comments": [
+      "Optional personal/thinker notes here (may be empty)."
+    ]
+  },
+
+  "useful_adams_quotes": [
+    {
+      "quote": "Exact quote text here.",
+      "start_sec": null,
+      "end_sec": null,
+      "note": "Why this quote matters / where it lands."
+    }
+  ],
+
+  "persuasion_tips": [
+    {
+      "tip": "A persuasion tactic Scott is using or describing.",
+      "evidence": "Short supporting excerpt from THIS transcript only (not outside memory).",
+      "why_it_works": "One sentence mechanism.",
+      "risk_or_limit": "One sentence caveat (optional)."
+    }
+  ],
+
+  "predictions": [
+    {
+      "prediction": "Prediction stated or implied by Scott.",
+      "confidence": "low",
+      "time_horizon": "unknown",
+      "evidence": "Supporting excerpt from transcript.",
+      "resolved": false,
+      "resolution_note": null
+    }
+  ],
+
+  "traits": {
+    "guest": null,
+    "dale": {
+      "present": false,
+      "moments": [
+        {
+          "note": "Optional: description of the Dale bit.",
+          "evidence": "Short excerpt.",
+          "cut": false
+        }
+      ]
+    },
+    "thought_experiment": {
+      "present": false,
+      "moments": [
+        {
+          "note": "What the thought experiment was.",
+          "evidence": "Short excerpt."
+        }
+      ]
+    }
+  },
+
+  "evaluation": {
+    "originality": { "score": 0, "note": "" },
+    "impact": { "score": 0, "note": "" },
+    "clarity": { "score": 0, "note": "" },
+    "focus": { "score": 0, "note": "" },
+    "timeliness": { "score": 0, "note": "" },
+    "humor": { "score": 0, "note": "" },
+    "overall": { "score": 0, "note": "" }
+  },
+
+  "quality_flags": {
+    "transcript_seems_coherent": true,
+    "obvious_asr_weirdness": false,
+    "anomalies": [
+      {
+        "type": "repetition",
+        "evidence": "do do do boom boom...",
+        "note": "Describe briefly"
+      }
+    ]
+  }
+}

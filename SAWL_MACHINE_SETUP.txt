@@ -1,0 +1,147 @@
+SAWL – MACHINE SETUP GUIDE
+For M4 Mini, M1 Mini, or any additional Mac worker
+===================================================
+
+Goal:
+Prepare a machine to run sawl_fw_run.py with faster-whisper
+against the shared SAWL iCloud directory.
+
+Assumptions:
+- macOS (Apple Silicon)
+- SAWL project stored in iCloud
+- ffmpeg required for ffprobe duration detection
+- CPU-based faster-whisper (int8)
+
+------------------------------------------------------------
+1. INSTALL HOMEBREW (if not already installed)
+------------------------------------------------------------
+
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+Verify:
+brew --version
+
+------------------------------------------------------------
+2. INSTALL SYSTEM DEPENDENCIES
+------------------------------------------------------------
+
+brew update
+brew install ffmpeg
+
+Verify ffprobe works:
+which ffprobe
+ffprobe -version | head -1
+
+------------------------------------------------------------
+3. NAVIGATE TO SAWL ROOT (iCloud location)
+------------------------------------------------------------
+
+cd "$HOME/Library/Mobile Documents/com~apple~CloudDocs/code/scraper/SAWL"
+
+Confirm:
+ls sawl_fw_run.py
+
+------------------------------------------------------------
+4. CREATE VIRTUAL ENVIRONMENT
+------------------------------------------------------------
+
+python3 -m venv .venv
+source .venv/bin/activate
+
+Verify Python:
+python -V
+
+Upgrade tooling:
+python -m pip install --upgrade pip setuptools wheel
+
+------------------------------------------------------------
+5. INSTALL PYTHON LIBRARIES
+------------------------------------------------------------
+
+pip install faster-whisper
+
+Optional (recommended for consistent installs across machines):
+pip freeze > requirements.txt
+
+------------------------------------------------------------
+6. OPTIONAL: HUGGINGFACE TOKEN (FASTER MODEL DOWNLOADS)
+------------------------------------------------------------
+
+Create a read-only token at:
+https://huggingface.co/settings/tokens
+
+Then set it:
+
+export HF_TOKEN="YOUR_TOKEN_HERE"
+
+To make permanent:
+echo 'export HF_TOKEN="YOUR_TOKEN_HERE"' >> ~/.zshrc
+source ~/.zshrc
+
+------------------------------------------------------------
+7. TEST INSTALLATION
+------------------------------------------------------------
+
+Test import:
+python -c "from faster_whisper import WhisperModel; print('faster-whisper OK')"
+
+Run small episode test:
+python3 sawl_fw_run.py \
+  --range E0022 E0024 \
+  --model base \
+  --compute_type int8 \
+  --force
+
+------------------------------------------------------------
+8. MULTI-MACHINE SEGMENTING PLAN
+------------------------------------------------------------
+
+Studio:
+--range E0022 E1500
+
+M4 Mini:
+--range E1501 E2400
+
+M1 Mini:
+--range E2401 E3074
+
+Each machine writes to separate episode branches:
+data/episodes/E####-YYYYMMDD/whisper/fw-base/
+
+No write contention.
+
+------------------------------------------------------------
+9. KEEP MAC FROM SLEEPING DURING LONG RUNS
+------------------------------------------------------------
+
+Run in a separate terminal window:
+
+caffeinate -dimsu
+
+------------------------------------------------------------
+10. TROUBLESHOOTING
+------------------------------------------------------------
+
+If ffprobe fails:
+brew reinstall ffmpeg
+
+If faster-whisper fails:
+pip uninstall faster-whisper
+pip install faster-whisper
+
+If environment looks wrong:
+deactivate
+rm -rf .venv
+Repeat steps 4–5
+
+------------------------------------------------------------
+END STATE CHECKLIST
+------------------------------------------------------------
+
+✓ ffprobe works
+✓ faster-whisper imports
+✓ sawl_fw_run.py runs successfully
+✓ Outputs written under data/episodes/.../whisper/fw-base
+✓ manifest.json includes duration_seconds
+
+System is ready for batch processing.
