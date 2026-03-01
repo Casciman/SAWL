@@ -122,6 +122,13 @@ def safe_get(d: dict, *keys, default=None):
             return d.get(k)
     return default
 
+def norm_title(s: str) -> str:
+    s = (s or "").strip()
+    # Some titles start with ": " (or multiple colons) — remove that noise.
+    while s.startswith(":"):
+        s = s[1:].lstrip()
+    return s
+
 # ------------------------------ EV App ------------------------------
 
 class EpisodeViewer(tk.Tk):
@@ -157,48 +164,72 @@ class EpisodeViewer(tk.Tk):
     # ---------------- UI ----------------
 
     def _build_ui(self):
-        self.columnconfigure(0, weight=1)  # left nav
-        self.columnconfigure(1, weight=3)  # right splat
+        # Fixed-ish left pane, right pane grows
+        self.columnconfigure(0, weight=0, minsize=460)  # tweak 420–520 to taste
+        self.columnconfigure(1, weight=1)
         self.rowconfigure(0, weight=1)
 
+        # ---------------- Left nav ----------------
         # Left nav frame
         nav = ttk.Frame(self, padding=8)
         nav.grid(row=0, column=0, sticky="nsew")
-        nav.columnconfigure(0, weight=1)
-        nav.rowconfigure(2, weight=1)
 
-        ttk.Label(nav, text="Search:").grid(row=0, column=0, sticky="w")
+        # Two columns: label + entry
+        nav.columnconfigure(0, weight=0)
+        nav.columnconfigure(1, weight=1)
+        nav.columnconfigure(2, weight=0)   # <-- add this
+        nav.rowconfigure(2, weight=1)   # listbox expands
+
+
+        # Row 0 — Episodes label (full width)
+        epi_lbl = ttk.Label(nav, text="Episodes", font=("Menlo", 12, "bold"))
+        epi_lbl.grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 8))
+
+
+        # Row 1 — Search label + entry
+        search_lbl = ttk.Label(nav, text="Search:", font=("Menlo", 12, "bold"))
+        search_lbl.grid(row=1, column=0, sticky="w", padx=(0, 8))
+
         ent = ttk.Entry(nav, textvariable=self.var_search)
-        ent.grid(row=1, column=0, sticky="ew", pady=(4, 8))
+        ent.grid(row=1, column=1, sticky="ew")
+
         ent.bind("<KeyRelease>", lambda e: self._apply_filter())
         ent.bind("<Escape>", lambda e: self._clear_search())
         ent.bind("<Return>", lambda e: self._open_first_match())
 
-        self.lbl_count = ttk.Label(nav, text="0/0")
-        self.lbl_count.grid(row=1, column=0, sticky="e")
 
+        # Row 2 — Listbox
         self.listbox = tk.Listbox(nav, activestyle="dotbox")
-        self.listbox.grid(row=2, column=0, sticky="nsew")
+        self.listbox.grid(row=2, column=0, columnspan=2, sticky="nsew")
+
+        self.listbox.configure(font=("Menlo", 12), width=52)
+        self.listbox.configure(exportselection=False)
+
         self.listbox.bind("<<ListboxSelect>>", lambda e: self._on_select())
         self.listbox.bind("<Double-Button-1>", lambda e: self._open_detail_default())
 
         sb = ttk.Scrollbar(nav, orient="vertical", command=self.listbox.yview)
-        sb.grid(row=2, column=1, sticky="ns")
+        sb.grid(row=2, column=2, sticky="ns")
         self.listbox.configure(yscrollcommand=sb.set)
 
-        # Right content frame
+        # ---------------- Right content ----------------
         main = ttk.Frame(self, padding=(8, 8, 8, 8))
         main.grid(row=0, column=1, sticky="nsew")
         main.columnconfigure(0, weight=1)
+        nav.columnconfigure(2, weight=0)
         main.rowconfigure(1, weight=1)
 
-        # Button strip
+        # Header frame (2 rows)
         top = ttk.Frame(main)
         top.grid(row=0, column=0, sticky="ew")
-        top.columnconfigure(0, weight=1)
+        top.columnconfigure(0, weight=1)  # text column grows
+        top.columnconfigure(1, weight=0)  # buttons column stays tight
 
-        self.lbl_header = ttk.Label(top, text="(select an episode)", font=("Menlo", 12, "bold"))
-        self.lbl_header.grid(row=0, column=0, sticky="w")
+        nav.columnconfigure(2, weight=0)
+
+        # Row 0 — episode id + date (left) and buttons (right)
+        self.lbl_meta = ttk.Label(top, text="(select an episode)", font=("Menlo", 12, "bold"))
+        self.lbl_meta.grid(row=0, column=0, sticky="w")
 
         btns = ttk.Frame(top)
         btns.grid(row=0, column=1, sticky="e")
@@ -208,7 +239,11 @@ class EpisodeViewer(tk.Tk):
         ttk.Button(btns, text="Copy Splat", command=self._copy_splat).grid(row=0, column=2, padx=(0, 6))
         ttk.Button(btns, text="Reload", command=self._reload).grid(row=0, column=3)
 
-        # Splat text (copyable “canvas”)
+        # Row 1 — FULL TITLE (wide)
+        self.lbl_title = ttk.Label(top, text="", font=("Menlo", 12, "bold"), justify="left")
+        self.lbl_title.grid(row=1, column=0, columnspan=2, sticky="ew", pady=(4, 0))
+        
+        # Splat text
         self.splat = scrolledtext.ScrolledText(main, wrap=tk.WORD)
         self.splat.grid(row=1, column=0, sticky="nsew", pady=(8, 0))
         self.splat.configure(font=("Menlo", 12))
@@ -368,13 +403,13 @@ class EpisodeViewer(tk.Tk):
         for e in self.filtered:
             ep = e.get("episode_id", "")
             dt = e.get("date", "")
-            title = compact_one_line(e.get("title", ""), 90)
+            title = compact_one_line(norm_title(e.get("title", "")), 90)
             guest = compact_one_line(e.get("guest", ""), 40)
             tag = "json" if e.get("has_json") else "nojson"
-            line = f"{ep} | {dt} | {title} | {guest} [{tag}]"
+            line = f"{ep:<5} {dt:<10} {title}"
             self.listbox.insert(tk.END, line)
 
-        self.lbl_count.config(text=f"{len(self.filtered)}/{len(self.episodes)}")
+        # self.lbl_count.config(text=f"{len(self.filtered)}/{len(self.episodes)}")
 
         # keep selection stable if possible
         if self.filtered and self.listbox.size() > 0 and self.listbox.curselection() == ():
@@ -417,8 +452,12 @@ class EpisodeViewer(tk.Tk):
         ep_id = e.get("episode_id", "")
         dt = e.get("date", "")
         title = e.get("title", "")
+        # Normalize title (remove accidental leading colon + space)
+        if title:
+            title = title.lstrip(": ").strip()
         guest = e.get("guest", "")
-        self.lbl_header.config(text=f"{ep_id}  |  {dt}  |  {compact_one_line(title, 140)}  |  {compact_one_line(guest, 60)}")
+        self.lbl_meta.config(text=f"{ep_id}  |  {dt}")
+        self.lbl_title.config(text=f"{compact_one_line(title, 300)}" + (f"  |  {compact_one_line(guest, 80)}" if guest else ""))
 
         # Render splat
         splat_text = self._render_splat(self.current_json, e)
@@ -435,7 +474,11 @@ class EpisodeViewer(tk.Tk):
         """
         d = data or {}
         ep_id = safe_get(d, "episode_id", "episode", default=entry.get("episode_id", "")) or entry.get("episode_id", "")
-        title = safe_get(d, "title", "episode_title", default=entry.get("title", "")) or entry.get("title", "")
+        
+        title = norm_title(
+            safe_get(d, "title", "episode_title", default=entry.get("title", "")) or entry.get("title", "")
+        )
+        
         date = safe_get(d, "date", "episode_date", "published", default=entry.get("date", "")) or entry.get("date", "")
         traits = safe_get(d, "traits", default={})
         guest = ""
@@ -668,4 +711,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
