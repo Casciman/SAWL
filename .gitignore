@@ -14,13 +14,4 @@ paras_*.json
 paras_*.txt
 req_*.json
 labels_*.log
-test_lmstudio.py
-segment_player.py
-build_sawl_db.py
-chunks_final.py
-import_chunks_final.py
-labels_from_chunks.py
-make_chunks.py
-squash_transcript.py
-squash_tree.py
-file_descriptions.txt
+

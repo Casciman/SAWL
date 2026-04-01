@@ -1,0 +1,680 @@
+sqlite> pragma table_info(episodes);
+cid  name                      type     notnull  dflt_value       pk
+---  ------------------------  -------  -------  ---------------  --
+0    episode_pk                INTEGER  0        NULL             1 
+1    episode_id                TEXT     1        NULL             0 
+2    date                      TEXT     0        NULL             0 
+3    title                     TEXT     0        NULL             0 
+4    analysis_version          INTEGER  0        NULL             0 
+5    summary_narrative         TEXT     0        NULL             0 
+6    summary_compact_json      TEXT     0        NULL             0 
+7    topics_json               TEXT     0        NULL             0 
+8    traits_json               TEXT     0        NULL             0 
+9    notable_quotes_json       TEXT     0        NULL             0 
+10   persuasion_lessons_json   TEXT     0        NULL             0 
+11   predictions_json          TEXT     0        NULL             0 
+12   thought_experiments_json  TEXT     0        NULL             0 
+13   closing_observations      TEXT     0        NULL             0 
+14   evaluation_json           TEXT     0        NULL             0 
+15   ep_dir                    TEXT     0        NULL             0 
+16   ep_root                   TEXT     0        NULL             0 
+17   episode_json_path         TEXT     0        NULL             0 
+18   created_at                TEXT     0        datetime('now')  0 
+
+# Here are the json structures within the episodes table
+
+              episode_id = E0901
+             traits_json = {"dale": false, "guest": null, "thought_experiment": true, "whiteboard": false}
+             topics_json = ["Linda Tripp", "Bernie Sanders", "Trump", "Pandemic", "Toilet Paper Supply", "Oxytocin"]
+     notable_quotes_json = ["I don't know why President Obama hasn't supported Joe Biden long time ago, Trump says, he feels something is wrong.", "The hashtag then attracts all the attention and it trends and then people know where to go and then it connects everybody.", "You can disagree with anything I say. You just can't say something about me."]
+ persuasion_lessons_json = ["Creating curiosity keeps the audience engaged.", "Telling someone what they're thinking accurately can lock in a connection."]
+        predictions_json = ["Toilet paper supply would start to replenish about a month after shelves first emptied.", "The US will reach its peak use of resources around Saturday, without grotesque shortages that would kill people from lack."]
+thought_experiments_json = ["If you had said, okay, we're going to have this moment when you're going to say something in public and I want you to get the best writers in the world and bring them together and try to come up with a sentence or two. That's so provocative."]
+         evaluation_json = {"originality": 8, "impact": 7, "clarity": 9, "focus": 6, "timeliness": 8, "humor": 5}
+
+
+==========
+
+# Get first 20 episodes and show ep#, title and date
+
+select 
+  cast(substr(episode_id, 2) as integer) as ep_num,
+  title,
+  date
+from episodes
+order by ep_num
+limit 20;
+
+Result:
+ep_num  title                                                         date      
+------  ------------------------------------------------------------  ----------
+22      Trump’s Personal Attorney’s Office Raided                     2018-01-12
+
+23      Scott Critiques the Zuckerberg Testimony in Real Time         2018-01-13
+
+24      The Tweet War With Russia                                     2018-01-14
+
+
+==========
+
+select count(*) as total_episodes from episodes;
+total_episodes
+--------------
+3016          
+
+==========
+
+# Output one complete episode record for episode 22
+
+.mode line
+select * from episodes where episode_id = 'E0022';
+
+Result:
+              episode_pk = 1
+              episode_id = E0022
+                    date = 2018-01-12
+                   title = Trump’s Personal Attorney’s Office Raided
+        analysis_version = 1
+       summary_narrative = Scott Adams discusses the federal agents' raid on Michael Cohen's office and strongly supports President Trump firing officials involved. He calls for a poll to measure public opinion on this stance, expressing deep frustration with what he sees as an overreach by the government into private affairs.
+    summary_compact_json = ["Adams supports Trump firing officials involved in the raid on Cohen's office.", "Calls for a poll to gauge public support for such firings.", "Expresses anger over government interference in personal matters."]
+             topics_json = ["raid", "firing", "Trump", "Cohen", "government", "overreach"]
+             traits_json = {"dale": true, "guest": null, "thought_experiment": false, "whiteboard": false}
+     notable_quotes_json = ["At this point, President Trump has my full support to fire everybody.", "I don't care what the charges are. I don't care what they find at President Trump's personal lawyers place, period, game over.", "This crosses a line that is so striking to me that it just goes to overthrow of the presidency kind of situation."]
+ persuasion_lessons_json = ["Emotional appeals can sway public opinion.", "Highlighting perceived overreach can galvanize support."]
+        predictions_json = []
+thought_experiments_json = []
+    closing_observations = Adams strong stance on firing officials involved in the raid reflects a broader sentiment of frustration with government actions, particularly when they intersect with personal matters.
+         evaluation_json = {"originality": 7, "impact": 8, "clarity": 9, "focus": 8, "timeliness": 10, "humor": 5}
+                  ep_dir = E0022-20180112
+                 ep_root = data/episodes
+       episode_json_path = data/episodes/E0022-20180112/analysis/episode.json
+              created_at = 2026-03-03 19:47:21
+
+# Get count of episodes with Dale in them
+
+select count(*)
+from episodes
+where json_extract(traits_json, '$.dale') = 1;
+
+Result:
+count(*) = 99
+
+==========
+
+# Get Dale status in first 10 eps
+
+select
+  episode_id,
+  json_extract(traits_json, '$.dale') as dale_flag
+from episodes
+limit 10;
+
+Result:
+episode_id = E0022
+ dale_flag = 1
+
+episode_id = E0023
+ dale_flag = 0
+
+episode_id = E0024
+ dale_flag = 0
+
+# Get the json fields for episode 22
+
+select
+  traits_json,
+  topics_json,
+  notable_quotes_json,
+  persuasion_lessons_json,
+  evaluation_json
+from episodes
+where episode_id = 'E0022';
+
+Result:
+    traits_json = {"dale": true, "guest": null, "thought_experiment": false, "whiteboard": false}
+    topics_json = ["raid", "firing", "Trump", "Cohen", "government", "overreach"]
+    notable_quotes_json = ["At this point, President Trump has my full support to fire everybody.", "I don't care what the charges are. I don't care what they find at President Trump's personal lawyers place, period, game over.", "This crosses a line that is so striking to me that it just goes to overthrow of the presidency kind of situation."]
+    persuasion_lessons_json = ["Emotional appeals can sway public opinion.", "Highlighting perceived overreach can galvanize support."]
+    evaluation_json = {"originality": 7, "impact": 8, "clarity": 9, "focus": 8, "timeliness": 10, "humor": 5}
+
+# Inspect JSON structure directly
+
+select
+  json_extract(traits_json, '$.dale') as dale,
+  json_extract(traits_json, '$.guest') as guest,
+  json_extract(traits_json, '$.thought_experiment') as thought_experiment,
+  json_extract(traits_json, '$.whiteboard') as whiteboard
+from episodes
+where episode_id = 'E0022';
+
+Result:
+    dale = 1
+    guest = NULL
+    thought_experiment = 0
+    whiteboard = 0
+
+# Pull basic rows from 900 series
+
+select
+  episode_id,
+  date,
+  title
+from episodes
+where cast(substr(episode_id, 2) as integer) between 900 and 906
+order by cast(substr(episode_id, 2) as integer);
+
+Result:
+episode_id = E0900
+      date = 2020-04-08
+     title = Why I Have Decided to Identify as Woman to Lower My Coronavirus Risk
+
+episode_id = E0901
+      date = 2020-04-09
+     title = I Feel a Sensational Simultaneous Swaddle Coming on. Dont Resist
+
+episode_id = E0902
+      date = 2020-04-09
+     title = I Tell You About My Experience With Models. No Not That Kind
+
+# Inspect the json rows directly
+
+.mode line
+
+select
+  episode_id,
+  traits_json,
+  topics_json,
+  notable_quotes_json,
+  persuasion_lessons_json,
+  predictions_json,
+  thought_experiments_json,
+  evaluation_json
+from episodes
+where cast(substr(episode_id, 2) as integer) between 900 and 906
+order by cast(substr(episode_id, 2) as integer);
+
+Result:
+              episode_id = E0900
+             traits_json = {"dale": false, "guest": null, "thought_experiment": false, "whiteboard": false}
+             topics_json = ["coronavirus", "death count", "lockdowns", "media coverage", "pneumonia", "president trump"]
+     notable_quotes_json = ["You can't spell pandemic without damn.", "I'm going to give the task force a C-plus for reporting about how many materials that we need.", "The odds that you've had cancer for six months, but this is the week you died could be because of the cancer could be."]
+ persuasion_lessons_json = ["Use data visualization to end arguments effectively.", "Context is crucial in interpreting numbers and statistics."]
+        predictions_json = []
+thought_experiments_json = []
+         evaluation_json = {"originality": 8, "impact": 7, "clarity": 9, "focus": 8, "timeliness": 10, "humor": 6}
+
+              episode_id = E0901
+             traits_json = {"dale": false, "guest": null, "thought_experiment": true, "whiteboard": false}
+             topics_json = ["Linda Tripp", "Bernie Sanders", "Trump", "Pandemic", "Toilet Paper Supply", "Oxytocin"]
+     notable_quotes_json = ["I don't know why President Obama hasn't supported Joe Biden long time ago, Trump says, he feels something is wrong.", "The hashtag then attracts all the attention and it trends and then people know where to go and then it connects everybody.", "You can disagree with anything I say. You just can't say something about me."]
+ persuasion_lessons_json = ["Creating curiosity keeps the audience engaged.", "Telling someone what they're thinking accurately can lock in a connection."]
+        predictions_json = ["Toilet paper supply would start to replenish about a month after shelves first emptied.", "The US will reach its peak use of resources around Saturday, without grotesque shortages that would kill people from lack."]
+thought_experiments_json = ["If you had said, okay, we're going to have this moment when you're going to say something in public and I want you to get the best writers in the world and bring them together and try to come up with a sentence or two. That's so provocative."]
+         evaluation_json = {"originality": 8, "impact": 7, "clarity": 9, "focus": 6, "timeliness": 8, "humor": 5}
+
+              episode_id = E0902
+             traits_json = {"dale": false, "guest": null, "thought_experiment": true, "whiteboard": false}
+             topics_json = ["models", "coronavirus", "predictions", "behavior change", "politics", "Biden"]
+     notable_quotes_json = ["The models are meant to be useful. They're not meant to be accurate.", "If the model does that and it changes your behavior in a productive way, then it can be said that the model was useful, even completely inaccurate.", "We need to get back to work whenever the experts can tell us that doing so would keep the death count from coronavirus specifically below 50,000."]
+ persuasion_lessons_json = ["Persuasive models change behavior rather than being accurate.", "The effectiveness of persuasion lies in changing behavior, not just predicting outcomes."]
+        predictions_json = ["California will relax its restrictions on work and movement if the death count from coronavirus stays below 50,000."]
+thought_experiments_json = ["What if we only had two tests available for extended families with grandparents? Test the grandparents and isolate them to protect the elderly."]
+         evaluation_json = {"originality": 8, "impact": 7, "clarity": 9, "focus": 8, "timeliness": 10, "humor": 6}
+
+
+# Open up traits_json across 900–906
+
+select
+  e.episode_id,
+  j.key,
+  j.value
+from episodes e,
+     json_each(e.traits_json) j
+where cast(substr(e.episode_id, 2) as integer) between 900 and 906
+order by cast(substr(e.episode_id, 2) as integer), j.key;
+
+Result:
+episode_id = E0900
+       key = dale
+     value = 0
+
+episode_id = E0900
+       key = guest
+     value = NULL
+
+episode_id = E0900
+       key = thought_experiment
+     value = 0
+
+episode_id = E0900
+       key = whiteboard
+     value = 0
+
+episode_id = E0901
+       key = dale
+     value = 0
+
+episode_id = E0901
+       key = guest
+     value = NULL
+
+episode_id = E0901
+       key = thought_experiment
+     value = 1
+
+episode_id = E0901
+       key = whiteboard
+     value = 0
+
+episode_id = E0902
+       key = dale
+     value = 0
+
+episode_id = E0902
+       key = guest
+     value = NULL
+
+episode_id = E0902
+       key = thought_experiment
+     value = 1
+
+episode_id = E0902
+       key = whiteboard
+     value = 0
+
+episode_id = E0903
+       key = dale
+     value = 0
+
+episode_id = E0903
+       key = guest
+     value = NULL
+
+episode_id = E0903
+       key = thought_experiment
+     value = 1
+
+episode_id = E0903
+       key = whiteboard
+     value = 1
+
+
+# Open up evaluation_json across 900–906
+select
+  e.episode_id,
+  j.key,
+  j.value
+from episodes e,
+     json_each(e.evaluation_json) j
+where cast(substr(e.episode_id, 2) as integer) between 900 and 906
+order by cast(substr(e.episode_id, 2) as integer), j.key;
+
+Result:
+episode_id = E0900
+       key = clarity
+     value = 9
+
+episode_id = E0900
+       key = focus
+     value = 8
+
+episode_id = E0900
+       key = humor
+     value = 6
+
+episode_id = E0900
+       key = impact
+     value = 7
+
+episode_id = E0900
+       key = originality
+     value = 8
+
+episode_id = E0900
+       key = timeliness
+     value = 10
+
+episode_id = E0901
+       key = clarity
+     value = 9
+
+# Check whether the JSON schema is stable
+
+select distinct j.key
+from episodes e,
+     json_each(e.traits_json) j
+where cast(substr(e.episode_id, 2) as integer) between 900 and 906
+order by j.key;
+
+Result:
+etc
+From now on, Ill just show the queries. Run them and check out the output.
+
+# Good sequence for getting details.
+
+# Basic episode info for 900–906
+
+select episode_id, date, title
+from episodes
+where cast(substr(episode_id, 2) as integer) between 900 and 906
+order by cast(substr(episode_id, 2) as integer);
+
+# Open up traits_json across 900–906
+
+select distinct j.key
+from episodes e, json_each(e.traits_json) j
+where cast(substr(e.episode_id, 2) as integer) between 900 and 906
+order by j.key;
+
+# Open up evaluation_json across 900–906
+
+select distinct j.key
+from episodes e, json_each(e.evaluation_json) j
+where cast(substr(e.episode_id, 2) as integer) between 900 and 906
+order by j.key;
+
+# Open up traits_json across 900–906 with values
+
+select e.episode_id, j.key, j.value
+from episodes e, json_each(e.traits_json) j
+where cast(substr(e.episode_id, 2) as integer) between 900 and 906
+order by cast(substr(e.episode_id, 2) as integer), j.key;
+
+#  Topics are arrays, so we only get values, not keys. But we can still open them up.
+
+select e.episode_id, j.value as topic
+from episodes e, json_each(e.topics_json) j
+where cast(substr(e.episode_id, 2) as integer) between 900 and 906
+order by cast(substr(e.episode_id, 2) as integer), j.value;
+
+# Get some guests
+
+select
+  episode_id,
+  json_extract(traits_json, '$.guest') as guest
+from episodes
+where json_extract(traits_json, '$.guest') is not null
+limit 20;
+
+episode_id = E0031
+     guest = Joel Pollock
+
+episode_id = E0051
+     guest = Naval Ravikant
+
+episode_id = E0061
+     guest = Hawk Newsome
+
+episode_id = E0088
+     guest = Donovan Loomis
+
+episode_id = E0091
+     guest = Bill Pulte
+
+episode_id = E0126
+     guest = Dre Baldwin
+
+# Count all episodes with a guest
+
+select count(*)
+from episodes
+where json_extract(traits_json, '$.guest') is not null;
+
+count(*) = 72
+
+# Count by guest name
+
+select
+  json_extract(traits_json, '$.guest') as guest,
+  count(*) as appearances
+from episodes
+where json_extract(traits_json, '$.guest') is not null
+group by guest
+order by appearances desc, guest;
+      guest = Joel Pollock
+appearances = 5
+
+      guest = Bill Pulte
+appearances = 4
+
+      guest = Mark Schneider
+appearances = 3
+
+      guest = Brandon Darby
+appearances = 2
+
+      guest = David Mittelman
+appearances = 2
+
+      guest = Dr. Shiva
+appearances = 2
+
+# List every guest episode
+
+select
+  cast(substr(episode_id, 2) as integer) as ep_num,
+  date,
+  title,
+  json_extract(traits_json, '$.guest') as guest
+from episodes
+where json_extract(traits_json, '$.guest') is not null
+order by ep_num;
+
+ep_num = 31
+  date = 2018-01-21
+ title = Joel Pollack Explains the Iranian Nuke Deal
+ guest = Joel Pollock
+
+ep_num = 51
+  date = 2018-02-10
+ title = Scott Talks with Naval Ravikant, No Politics
+ guest = Naval Ravikant
+
+ep_num = 61
+  date = 2018-02-20
+ title = Black Lives Matter GNY Leader Hawk Newsome
+ guest = Hawk Newsome
+
+ep_num = 88
+  date = 2018-03-19
+ title = Donovan Loomis in South Korea
+ guest = Donovan Loomis
+
+ep_num = 91
+  date = 2018-03-22
+ title = Bill Pulte, Founder of Blight Authority, Solutions for Urban Decay⧸Crime
+ guest = Bill Pulte
+
+ep_num = 126
+  date = 2018-04-26
+ title = Dre Baldwin, Expert on Discipline, Building Confidence, and Mental Toughness
+ guest = Dre Baldwin
+
+ep_num = 166
+  date = 2018-06-05
+ title = ： Hawk Newsome on the Agape March for Love, Food equality and More
+ guest = Hawk Newsome
+
+ep_num = 170
+  date = 2018-06-09
+ title = coinpulse io Founder Chez Darji Explains Crypto
+ guest = Chez Darji
+
+ep_num = 171
+  date = 2018-06-10
+ title = Bill Pulte Talks About TheBlightAuthority.com Helping Urban Areas
+ guest = Bill Pulte
+
+ep_num = 193
+  date = 2018-07-02
+ title = : Talking to Dr. Shiva Ayyadurai (Running Against Elizabeth Warren)
+ guest = Dr. Shiva Ayyadurai
+
+ep_num = 202
+  date = 2018-07-11
+ title = : Crypto Exchange LATOKEN.com CEO Valentin Preobrazhenskiy
+ guest = Valentin Preobrazhenskiy
+
+# Guest frequency
+
+select
+  json_extract(traits_json, '$.guest') as guest,
+  count(*) as appearances
+from episodes
+where json_extract(traits_json, '$.guest') is not null
+group by guest
+order by appearances desc, guest;
+
+      guest = Joel Pollock
+appearances = 5
+
+      guest = Bill Pulte
+appearances = 4
+
+      guest = Mark Schneider
+appearances = 3
+
+      guest = Brandon Darby
+appearances = 2
+
+      guest = David Mittelman
+appearances = 2
+
+      guest = Dr. Shiva
+appearances = 2
+
+
+ # Cleaned version of the above query, showing only guests with 2 or more appearances
+
+ select
+  cast(substr(episode_id, 2) as integer) as ep_num,
+  date,
+  json_extract(traits_json, '$.guest') as guest,
+  title
+from episodes
+where json_extract(traits_json, '$.guest') is not null
+order by ep_num;
+ep_num = 31
+  date = 2018-01-21
+ guest = Joel Pollock
+ title = Joel Pollack Explains the Iranian Nuke Deal
+
+ep_num = 51
+  date = 2018-02-10
+ guest = Naval Ravikant
+ title = Scott Talks with Naval Ravikant, No Politics
+
+ep_num = 61
+  date = 2018-02-20
+ guest = Hawk Newsome
+ title = Black Lives Matter GNY Leader Hawk Newsome
+
+ep_num = 88
+  date = 2018-03-19
+ guest = Donovan Loomis
+ title = Donovan Loomis in South Korea
+
+ep_num = 91
+  date = 2018-03-22
+ guest = Bill Pulte
+ title = Bill Pulte, Founder of Blight Authority, Solutions for Urban Decay⧸Crime
+
+ ================
+
+# various totals
+
+select count(*) as total_quotes
+from episodes e, json_each(e.notable_quotes_json);
+total_quotes = 10292
+
+select count(*) as total_predictions
+from episodes e, json_each(e.predictions_json);
+total_predictions = 1005
+
+select count(*) as total_topics
+from episodes e, json_each(e.topics_json);
+total_topics = 17622
+
+select count(*) as total_persuasion_lessons
+from episodes e, json_each(e.persuasion_lessons_json);
+total_persuasion_lessons = 6478
+
+select count(*) as total_thought_experiments
+from episodes e, json_each(e.thought_experiments_json);
+total_thought_experiments = 1418
+
+# all at once
+
+select 'quotes' as kind, count(*) as total
+from episodes e, json_each(e.notable_quotes_json)
+
+union all
+
+select 'predictions' as kind, count(*) as total
+from episodes e, json_each(e.predictions_json)
+
+union all
+
+select 'topics' as kind, count(*) as total
+from episodes e, json_each(e.topics_json)
+
+union all
+
+select 'persuasion_lessons' as kind, count(*) as total
+from episodes e, json_each(e.persuasion_lessons_json)
+
+union all
+
+select 'thought_experiments' as kind, count(*) as total
+from episodes e, json_each(e.thought_experiments_json);
+ kind = quotes
+total = 10292
+
+ kind = predictions
+total = 1005
+
+ kind = topics
+total = 17622
+
+ kind = persuasion_lessons
+total = 6478
+
+ kind = thought_experiments
+total = 1418
+
+# First 50 predictions
+
+select
+  cast(substr(e.episode_id, 2) as integer) as ep_num,
+  e.date,
+  e.title,
+  j.value as prediction
+from episodes e,
+     json_each(e.predictions_json) j
+where json_array_length(e.predictions_json) > 0
+order by ep_num
+limit 50;
+    ep_num = 25
+      date = 2018-01-15
+     title = North Korea Walkouts and Presidential Tweets
+prediction = There should be a walk out and total breakdown of talks with North Korea, which is part of the negotiation process.
+
+    ep_num = 39
+      date = 2018-01-29
+     title = Tasteless Jokes and Iran
+prediction = Whatever Iran does will look like it's making things worse but won't be in the long term.
+
+    ep_num = 42
+      date = 2018-02-01
+     title = DMZ idea for Korean Talks
+prediction = If the DMZ is chosen for talks, it will likely be because the deal is already done.
+
+    ep_num = 42
+      date = 2018-02-01
+     title = DMZ idea for Korean Talks
+prediction = President Trumps suggestion indicates high confidence in reaching an agreement with North Korea.
+
+
+===========
+
+

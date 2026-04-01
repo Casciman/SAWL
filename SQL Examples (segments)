@@ -1,0 +1,985 @@
+# what is in the segments table.
+
+pragma table_info(segments);
+       cid = 0
+      name = segment_pk
+      type = INTEGER
+   notnull = 0
+dflt_value = NULL
+        pk = 1
+
+       cid = 1
+      name = episode_id
+      type = TEXT
+   notnull = 1
+dflt_value = NULL
+        pk = 0
+
+       cid = 2
+      name = run_pk
+      type = INTEGER
+   notnull = 0
+dflt_value = NULL
+        pk = 0
+
+       cid = 3
+      name = seg_index
+      type = INTEGER
+   notnull = 1
+dflt_value = NULL
+        pk = 0
+
+       cid = 4
+      name = start_s
+      type = REAL
+   notnull = 1
+dflt_value = NULL
+        pk = 0
+
+       cid = 5
+      name = end_s
+      type = REAL
+   notnull = 1
+dflt_value = NULL
+        pk = 0
+
+       cid = 6
+      name = text
+      type = TEXT
+   notnull = 0
+dflt_value = NULL
+        pk = 0
+
+===========
+
+select group_concat(text, ' ') as joined_text
+from (
+  select text
+  from segments
+  where episode_id = 'E0055'
+    and seg_index between 23 and 45
+  order by seg_index
+);
+joined_text =  resources and the network the investments the the hiring decisions and and all  of the the advice the mentoring and all the stuff you can get from white people  because the white people have lots of resources and as I said before the  greatest untapped resource in the world for African-Americans is that white  people like to help you know I say that like it's like maybe other people don't  like to help but of course everybody likes to help but white people in  particular we like to help plus here's the fun part white people have all the  resources you know I'm exaggerating we don't have all the resources but you know  what I mean and so I wanted to give you a an actual live demonstration of this  point okay so Candace Owen got retweeted by the president this morning she's  getting lots of well-deserved attention because she's doing a tremendous job  of expressing a point of view that had been underserved now I watched that  tweet and I watch her work and I think to myself wow she's doing really good  things and what is the next thing you would expect Candace to do in the  natural arc of her career probably write a book right now I don't know if she  wants to write a book but for people who who get prominence and get a lot of  attention in the political sphere the normal the normal path is to write a book  that gives you speaking in calm it gives you sort of an introduction to a lot  of a lot of places that you just wouldn't get without writing the book and here  again I'm going to give you a demonstration of how useful this to have friends  who are white people so Candace follows me on Twitter we've never met we've  never never had any communication and since we follow each other on Twitter I  can I can send her a message so live while you're watching I've composed a
+
+=================
+
+# inspect pieces first
+
+select seg_index, start_s, end_s, text
+from segments
+where episode_id = 'E0055'
+  and seg_index between 23 and 45
+order by seg_index;
+seg_index = 23
+  start_s = 168.4
+    end_s = 174.88
+     text =  resources and the network the investments the the hiring decisions and and all
+
+seg_index = 24
+  start_s = 174.88
+    end_s = 182.96
+     text =  of the the advice the mentoring and all the stuff you can get from white people
+
+seg_index = 25
+  start_s = 182.96
+    end_s = 188.24
+     text =  because the white people have lots of resources and as I said before the
+
+seg_index = 26
+  start_s = 188.24
+    end_s = 195.08
+     text =  greatest untapped resource in the world for African-Americans is that white
+
+seg_index = 27
+  start_s = 195.08
+    end_s = 200.0
+     text =  people like to help you know I say that like it's like maybe other people don't
+
+seg_index = 28
+  start_s = 200.0
+    end_s = 204.4
+     text =  like to help but of course everybody likes to help but white people in
+
+
+# better stitching
+
+select trim(group_concat(text, ' ')) as joined_text
+from (
+  select text
+  from segments
+  where episode_id = 'E0055'
+    and seg_index between 23 and 45
+  order by seg_index
+);
+joined_text = resources and the network the investments the the hiring decisions and and all  of the the advice the mentoring and all the stuff you can get from white people  because the white people have lots of resources and as I said before the  greatest untapped resource in the world for African-Americans is that white  people like to help you know I say that like it's like maybe other people don't  like to help but of course everybody likes to help but white people in  particular we like to help plus here's the fun part white people have all the  resources you know I'm exaggerating we don't have all the resources but you know  what I mean and so I wanted to give you a an actual live demonstration of this  point okay so Candace Owen got retweeted by the president this morning she's  getting lots of well-deserved attention because she's doing a tremendous job  of expressing a point of view that had been underserved now I watched that  tweet and I watch her work and I think to myself wow she's doing really good  things and what is the next thing you would expect Candace to do in the  natural arc of her career probably write a book right now I don't know if she  wants to write a book but for people who who get prominence and get a lot of  attention in the political sphere the normal the normal path is to write a book  that gives you speaking in calm it gives you sort of an introduction to a lot  of a lot of places that you just wouldn't get without writing the book and here  again I'm going to give you a demonstration of how useful this to have friends  who are white people so Candace follows me on Twitter we've never met we've  never never had any communication and since we follow each other on Twitter I  can I can send her a message so live while you're watching I've composed a
+
+# better readability
+
+select group_concat(text, char(10) || char(10)) as joined_text
+from (
+  select text
+  from segments
+  where episode_id = 'E0055'
+    and seg_index between 23 and 45
+  order by seg_index
+);
+joined_text =  resources and the network the investments the the hiring decisions and and all
+
+ of the the advice the mentoring and all the stuff you can get from white people
+
+ because the white people have lots of resources and as I said before the
+
+ greatest untapped resource in the world for African-Americans is that white
+
+ people like to help you know I say that like it's like maybe other people don't
+
+ like to help but of course everybody likes to help but white people in
+
+ particular we like to help plus here's the fun part white people have all the
+
+ resources you know I'm exaggerating we don't have all the resources but you know
+
+ what I mean and so I wanted to give you a an actual live demonstration of this
+
+ point okay so Candace Owen got retweeted by the president this morning she's
+
+ getting lots of well-deserved attention because she's doing a tremendous job
+
+ of expressing a point of view that had been underserved now I watched that
+
+ tweet and I watch her work and I think to myself wow she's doing really good
+
+ things and what is the next thing you would expect Candace to do in the
+
+ natural arc of her career probably write a book right now I don't know if she
+
+ wants to write a book but for people who who get prominence and get a lot of
+
+ attention in the political sphere the normal the normal path is to write a book
+
+ that gives you speaking in calm it gives you sort of an introduction to a lot
+
+ of a lot of places that you just wouldn't get without writing the book and here
+
+ again I'm going to give you a demonstration of how useful this to have friends
+
+ who are white people so Candace follows me on Twitter we've never met we've
+
+ never never had any communication and since we follow each other on Twitter I
+
+ can I can send her a message so live while you're watching I've composed a
+
+ 
+ # timestamps inline
+
+select group_concat(
+  printf('[%.1f] %s', start_s, text),
+  char(10)
+) as joined_text
+from (
+  select start_s, text
+  from segments
+  where episode_id = 'E0055'
+    and seg_index between 23 and 45
+  order by seg_index
+);
+joined_text = [168.4]  resources and the network the investments the the hiring decisions and and all
+[174.9]  of the the advice the mentoring and all the stuff you can get from white people
+[183.0]  because the white people have lots of resources and as I said before the
+[188.2]  greatest untapped resource in the world for African-Americans is that white
+[195.1]  people like to help you know I say that like it's like maybe other people don't
+[200.0]  like to help but of course everybody likes to help but white people in
+[204.4]  particular we like to help plus here's the fun part white people have all the
+[210.7]  resources you know I'm exaggerating we don't have all the resources but you know
+[215.2]  what I mean and so I wanted to give you a an actual live demonstration of this
+[222.3]  point okay so Candace Owen got retweeted by the president this morning she's
+[228.0]  getting lots of well-deserved attention because she's doing a tremendous job
+[232.7]  of expressing a point of view that had been underserved now I watched that
+[240.0]  tweet and I watch her work and I think to myself wow she's doing really good
+[244.6]  things and what is the next thing you would expect Candace to do in the
+[252.0]  natural arc of her career probably write a book right now I don't know if she
+[257.0]  wants to write a book but for people who who get prominence and get a lot of
+[262.0]  attention in the political sphere the normal the normal path is to write a book
+[268.2]  that gives you speaking in calm it gives you sort of an introduction to a lot
+[272.8]  of a lot of places that you just wouldn't get without writing the book and here
+[278.5]  again I'm going to give you a demonstration of how useful this to have friends
+[286.7]  who are white people so Candace follows me on Twitter we've never met we've
+[292.9]  never never had any communication and since we follow each other on Twitter I
+[299.2]  can I can send her a message so live while you're watching I've composed a
+
+
+# selection of segments in range
+
+select *
+from segments
+where episode_id = 'E0031'
+and seg_index between 40 and 80;
+segment_pk = 1615
+episode_id = E0031
+    run_pk = NULL
+ seg_index = 40
+   start_s = 265.52
+     end_s = 270.8
+      text =  them hostage. And we delivered this cash to them on pallets in the middle of the night on a cargo
+
+segment_pk = 1616
+episode_id = E0031
+    run_pk = NULL
+ seg_index = 41
+   start_s = 270.8
+     end_s = 276.64
+      text =  plane. It all looked very, very dodgy. So, we gave them all of these benefits. In return,
+
+segment_pk = 1617
+episode_id = E0031
+    run_pk = NULL
+ seg_index = 42
+   start_s = 277.44
+     end_s = 283.84
+      text =  they slow down some of their nuclear centrifuges. They slow down their development of nuclear
+
+segment_pk = 1618
+episode_id = E0031
+    run_pk = NULL
+ seg_index = 43
+   start_s = 283.84
+     end_s = 292.64
+      text =  materials. They slow down any research and progress on nuclear weapons programs. And that
+
+segment_pk = 1619
+episode_id = E0031
+    run_pk = NULL
+ seg_index = 44
+   start_s = 292.64
+     end_s = 296.96
+      text =  sun sets out after six years, eight years, ten years. They're different sunsets in the deal.
+
+segment_pk = 1620
+episode_id = E0031
+    run_pk = NULL
+ seg_index = 45
+   start_s = 297.76
+     end_s = 301.92
+      text =  But those aren't permanent commitments. They're mostly temporary commitments. Although the
+
+segment_pk = 1621
+episode_id = E0031
+    run_pk = NULL
+ seg_index = 46
+   start_s = 301.92
+     end_s = 306.88
+      text =  Obama administration tried to say, well, the Iranian parliament passed a resolution. They're
+
+segment_pk = 1622
+episode_id = E0031
+    run_pk = NULL
+ seg_index = 47
+   start_s = 306.88
+     end_s = 311.52
+      text =  not going to see nuclear weapons for 25 years. And that sort of thing. But that's all just on paper.
+
+==============
+
+SELECT COUNT(*) AS segment_count
+FROM segments
+WHERE lower(text) LIKE '%persuasion%'
+  AND lower(episode_id) LIKE '%scott%';
+
+5,370
+
+# then to show them
+
+SELECT episode_id, seg_index, start_s, end_s, text
+FROM segments
+WHERE lower(text) LIKE '%persuasion%'
+ORDER BY episode_id, seg_index;
+
+=================
+
+SELECT episode_id, COUNT(*) AS segment_count
+FROM segments
+WHERE lower(text) LIKE '%persuasion%'
+GROUP BY episode_id
+ORDER BY segment_count DESC;
+
+result:
+E1299       3            
+E1309       3            
+E1310       3            
+E1318       3            
+E1327       3            
+E1333       3            
+E1367       3            
+E1379       3            
+E1391       3            
+E1429       3            
+E1451       3            
+E1466       3            
+E1476       3            
+E1477       3            
+E1483       3            
+E1484       3    etc
+
+==============
+
+
+SELECT COUNT(*) AS segment_count
+FROM segments
+WHERE lower(text) LIKE '%persuasion%'
+   OR lower(text) LIKE '%persuade%'
+   OR lower(text) LIKE '%persuasive%';
+segment_count
+-------------
+8519         
+
+===========
+
+SELECT episode_id, COUNT(*) AS segment_count
+FROM segments
+WHERE lower(text) LIKE '%persuasion%'
+   OR lower(text) LIKE '%persuade%'
+   OR lower(text) LIKE '%persuasive%'
+GROUP BY episode_id
+ORDER BY segment_count DESC limit 40;
+episode_id  segment_count
+----------  -------------
+E0438       51           
+E1478       49           
+E2411       41           
+E0422       37           
+E2010       33           
+E0423       31           
+E1909       29           
+E2169       29           
+E2560       29           
+E1867       28           
+
+================
+
+# want to inspect one of the heaviest episodes directly, use:
+
+SELECT seg_index, start_s, end_s, text
+FROM segments
+WHERE episode_id = 'E0438'
+  AND (
+    lower(text) LIKE '%persuasion%'
+    OR lower(text) LIKE '%persuade%'
+    OR lower(text) LIKE '%persuasive%'
+  )
+ORDER BY seg_index;
+seg_index  start_s  end_s    text                                                        
+---------  -------  -------  ------------------------------------------------------------
+16         97.52    111.36    All right, so let's talk about a, let's talk about the pers
+                             uasion scorecard.                                           
+
+17         111.36   117.52    Now, I've got a few things that I'm going to talk about in 
+                             terms of persuasion, but                                    
+
+20         123.56   131.2     But let's just take a look at some of the more current pers
+                             uasion plays.                                               
+
+26         162.84   168.92    And I worry that part of the reason that when I talk about 
+                             persuasion, people have trouble                             
+
+30         181.72   188.2     the whole persuasion filter on life, the persuasion is a th
+                             ing and it matters and you can persuade                     
+
+35         203.2    207.0     So a debater is not trying to persuade the person they're d
+                             ebating with.                                               
+
+61         317.88   323.2     There are only persuaders and persuadis trying to persuade 
+                             each other.                                                 
+
+62         323.2    332.92    So with that in mind, let's go to the persuasion scorecard 
+                             and look at a few of the topics in                          
+
+85         437.16   446.2     So I'm going to give a grade to Maga for persuasion A plus.
+
+87         450.08   457.84    So that's an A plus for the Democrats persuasion wise, they
+                             've turned the best slogan of all time                      
+
+89         460.2    464.68    That is really, really effective persuasion.               
+
+96         488.64   491.96    That's good persuasion.                                    
+
+109        540.56   546.16    Now if you understand persuasion, you know that people tend
+                              to read the first part of                                  
+
+114        564.56   567.56    Bernie in general is very persuasive.                      
+
+116        572.28   578.32    So if you look at him as a character, as a politician, he's
+                              very persuasive.                                           
+
+127        621.08   622.88    It's talking about persuasion.                             
+
+128        622.88   630.68    On the persuasion level, let's get rid of this critic block
+                             .                                                           
+
+129        630.68   635.96    On a persuasion level, the president has caused the        
+
+131        641.32   647.08    It's the funniest persuasion play you've seen in a long tim
+                             e.                                                          
+
+143        694.96   701.92    We're seeing socialism being persuaded in both directions. 
+
+146        710.88   715.68    We're seeing the Trumpers persuade against it.             
+
+147        715.68   719.88    We're seeing the conservatives persuade against it.        
+
+187        928.56   933.56    So the Cohen thing, I thought would be persuasive, but it w
+                             asn't.                                                      
+
+190        941.56   945.56    I have reframed my own persuasion.                         
+
+195        980.56   994.56    So the persuasion game was that the anti-Trumpers have turn
+                             ed a fake news bit, a hoax, into a generally accepted truth,
+
+=================
+
+#  Earliest and latest mention in each episode
+
+SELECT
+  episode_id,
+  MIN(start_s) AS first_hit_s,
+  MAX(start_s) AS last_hit_s,
+  ROUND(MAX(start_s) - MIN(start_s), 2) AS spread_s,
+  COUNT(*) AS hit_count
+FROM segments
+WHERE lower(text) LIKE '%persuasion%'
+   OR lower(text) LIKE '%persuade%'
+   OR lower(text) LIKE '%persuasive%'
+GROUP BY episode_id
+ORDER BY hit_count DESC
+LIMIT 40;
+episode_id  first_hit_s  last_hit_s  spread_s  hit_count
+----------  -----------  ----------  --------  ---------
+E0438       97.52        2900.56     2803.04   51       
+E1478       725.04       2682.24     1957.2    49       
+E2411       368.4        3865.84     3497.44   41       
+E0422       696.16       1771.52     1075.36   37       
+E2010       1592.0       4388.0      2796.0    33       
+E0423       66.84        1056.0      989.16    31       
+E1909       78.36        2798.56     2720.2    29       
+E2169       2817.36      4554.4      1737.04   29       
+E2560       817.44       4646.56     3829.12   29       
+E1867       608.68       4415.72     3807.04   28       
+E1922       152.0        5904.0      5752.0    28       
+E0705       292.32       3135.96     2843.64   27       
+E1956       1880.32      4151.88     2271.56   26       
+E0160       1133.98      3713.98     2580.0    25       
+E1338       789.36       4004.08     3214.72   25       
+E0578       101.06       3270.14     3169.08   24       
+E1016       1209.64      3247.8      2038.16   24       
+E1326       1049.0       4020.2      2971.2    24       
+E1493       1467.46      2306.34     838.88    24       
+E1683       186.16       2956.28     2770.12   24       
+E2432       214.56       2981.6      2767.04   24       
+E1733       1309.88      3197.14     1887.26   23       
+E0033       621.5        2765.5      2144.0    22       
+E0082       51.0         2365.0      2314.0    22       
+
+=============
+
+# Position in the episode as a percentage
+
+WITH ep AS (
+  SELECT episode_id, MAX(end_s) AS episode_len_s
+  FROM segments
+  GROUP BY episode_id
+)
+SELECT
+  s.episode_id,
+  s.seg_index,
+  ROUND(s.start_s, 2) AS start_s,
+  ROUND(e.episode_len_s, 2) AS episode_len_s,
+  ROUND(100.0 * s.start_s / e.episode_len_s, 1) AS pct_into_episode,
+  s.text
+FROM segments s
+JOIN ep e ON s.episode_id = e.episode_id
+WHERE lower(s.text) LIKE '%persuasion%'
+   OR lower(s.text) LIKE '%persuade%'
+   OR lower(s.text) LIKE '%persuasive%'
+ORDER BY s.episode_id, s.start_s
+LIMIT 20;
+
+episode_id  seg_index  start_s  episode_len_s  pct_into_episode  text                                                        
+----------  ---------  -------  -------------  ----------------  ------------------------------------------------------------
+E0028       101        810.6    962.52         84.2               persuasive is exactly that you know when Dilbert first hit 
+                                                                 it stride and people had heard of it                        
+
+E0028       106        844.44   962.52         87.7               it's a good idea by the way I often am asked you know are t
+                                                                 here any other master persuaders                            
+
+E0028       109        875.4    962.52         90.9               and I always thought to myself the hardest thing that PayPa
+                                                                 l had to do was to persuade people to                       
+
+E0028       115        917.16   962.52         95.3               so the the PayPal Mafia are some seriously persuasive peopl
+                                                                 e they gave you Elon Musk they                              
+
+E0028       119        946.84   962.52         98.4               because they have extra skills persuasion wise that are har
+                                                                 d to ignore all right that's enough                         
+
+E0029       119        576.48   3907.48        14.8               Now, in that same article, I talk about this was before I w
+                                                                 as using the word persuasion.    
+
+==========================
+
+# Average mention time by episode
+
+WITH ep AS (
+  SELECT episode_id, MAX(end_s) AS episode_len_s
+  FROM segments
+  GROUP BY episode_id
+)
+SELECT
+  s.episode_id,
+  COUNT(*) AS hit_count,
+  ROUND(AVG(s.start_s), 2) AS avg_hit_time_s,
+  ROUND(AVG(100.0 * s.start_s / e.episode_len_s), 1) AS avg_pct_into_episode
+FROM segments s
+JOIN ep e ON s.episode_id = e.episode_id
+WHERE lower(s.text) LIKE '%persuasion%'
+   OR lower(s.text) LIKE '%persuade%'
+   OR lower(s.text) LIKE '%persuasive%'
+GROUP BY s.episode_id
+ORDER BY hit_count DESC
+LIMIT 40;
+episode_id  hit_count  avg_hit_time_s  avg_pct_into_episode
+----------  ---------  --------------  --------------------
+E0438       51         1055.24         31.2                
+E1478       49         1340.66         49.8                
+E2411       41         1955.12         38.1                
+E0422       37         1370.39         75.4                
+E2010       33         3211.88         62.2                
+E0423       31         459.54          40.7                
+E2560       29         2409.88         50.3                
+E2169       29         4080.03         85.9                
+E1909       29         1335.21         37.7                
+E1922       28         2467.89         41.7                
+E1867       28         2087.97         45.0                
+E0705       27         1890.52         47.0                
+E1956       26         2372.92         52.2                
+E1338       25         3103.37         76.6                
+E0160       25         2349.06         62.4                
+E2432       24         1064.38         24.8                
+E1683       24         1014.91         31.8                
+E1493       24         1805.47         65.1                
+E1326       24         2401.03         58.7                
+E1016       24         1677.92         38.4                
+E0578       24         1302.43         35.7                
+E1733       23         2298.82         61.4                
+E2041       22         1904.42         40.2                
+E1873       22         3007.66         66.0                
+E0082       22         1288.58         51.8          
+
+====================
+
+# more clear
+
+WITH ep AS (
+  SELECT episode_id, MAX(end_s) AS episode_len_s
+  FROM segments
+  GROUP BY episode_id
+)
+SELECT
+  s.episode_id,
+  COUNT(*) AS hit_count,
+  ROUND(AVG(s.start_s), 2) AS avg_hit_time_s,
+  ROUND(AVG(s.start_s) / 60.0, 2) AS avg_hit_time_min,
+  ROUND(AVG(100.0 * s.start_s / e.episode_len_s), 1) AS avg_pct_into_episode
+FROM segments s
+JOIN ep e ON s.episode_id = e.episode_id
+WHERE lower(s.text) LIKE '%persuasion%'
+   OR lower(s.text) LIKE '%persuade%'
+   OR lower(s.text) LIKE '%persuasive%'
+GROUP BY s.episode_id
+ORDER BY hit_count DESC
+LIMIT 40;
+episode_id  hit_count  avg_hit_time_s  avg_hit_time_min  avg_pct_into_episode
+----------  ---------  --------------  ----------------  --------------------
+E0438       51         1055.24         17.59             31.2                
+E1478       49         1340.66         22.34             49.8                
+E2411       41         1955.12         32.59             38.1                
+E0422       37         1370.39         22.84             75.4                
+E2010       33         3211.88         53.53             62.2                
+E0423       31         459.54          7.66              40.7                
+E2560       29         2409.88         40.16             50.3                
+E2169       29         4080.03         68.0              85.9                
+E1909       29         1335.21         22.25             37.7                
+E1922       28         2467.89         41.13             41.7                
+E1867       28         2087.97         34.8              45.0         
+
+=============
+
+# build a bigger candidate list from likely public figures (aggregates similars)
+
+WITH names(name) AS (
+  VALUES
+    ('Trump'),
+    ('Donald Trump'),
+    ('Biden'),
+    ('Joe Biden'),
+    ('Kamala Harris'),
+    ('Kamala'),
+    ('Harris'),
+    ('Obama'),
+    ('Barack Obama'),
+    ('Michelle Obama'),
+    ('Hillary Clinton'),
+    ('Clinton'),
+    ('Bill Clinton'),
+    ('Putin'),
+    ('Vladimir Putin'),
+    ('Xi'),
+    ('Xi Jinping'),
+    ('Musk'),
+    ('Elon Musk'),
+    ('Kennedy'),
+    ('RFK'),
+    ('RFK Jr'),
+    ('Robert Kennedy'),
+    ('Vance'),
+    ('JD Vance'),
+    ('DeSantis'),
+    ('Ron DeSantis'),
+    ('Newsom'),
+    ('Gavin Newsom'),
+    ('Schumer'),
+    ('Pelosi'),
+    ('AOC'),
+    ('Bernie'),
+    ('Sanders'),
+    ('Tucker'),
+    ('Carlson'),
+    ('Scott Adams')
+)
+SELECT
+  n.name,
+  COUNT(*) AS segment_hits
+FROM names n
+JOIN segments s
+  ON lower(s.text) LIKE '%' || lower(n.name) || '%'
+GROUP BY n.name
+ORDER BY segment_hits DESC, n.name;
+name             segment_hits
+---------------  ------------
+Trump            55751       
+Biden            19923       
+Xi               14050       
+Musk             6333        
+Putin            4961        
+Elon Musk        4350        
+Harris           4203        
+Joe Biden        3480        
+Kamala           2486        
+Obama            2474        
+Tucker           2061        
+Scott Adams      1955        
+Kamala Harris    1905        
+Clinton          1805        
+Bernie           1803        
+Vance            1783        
+RFK              1598        
+DeSantis         1268        
+AOC              1235        
+Pelosi           1095        
+Newsom           1078        
+Carlson          948         
+RFK Jr           893         
+Hillary Clinton  812         
+Donald Trump     620         
+Sanders          582         
+Kennedy          557         
+Schumer          553         
+Bill Clinton     340         
+Gavin Newsom     294         
+JD Vance         269         
+Ron DeSantis     160         
+Michelle Obama   108         
+Barack Obama     94          
+Vladimir Putin   63          
+Robert Kennedy   15          
+Xi Jinping       6           
+
+===============
+
+# Here’s a better version that groups aliases under one person:
+# That gives you deduplicated segment counts by person, where a segment mentioning both 
+# “Trump” and “Donald Trump” only counts once for Donald Trump.
+
+WITH name_map(person, alias) AS (
+  VALUES
+    ('Donald Trump', 'Trump'),
+    ('Donald Trump', 'Donald Trump'),
+
+    ('Joe Biden', 'Biden'),
+    ('Joe Biden', 'Joe Biden'),
+
+    ('Kamala Harris', 'Kamala'),
+    ('Kamala Harris', 'Harris'),
+    ('Kamala Harris', 'Kamala Harris'),
+
+    ('Barack Obama', 'Obama'),
+    ('Barack Obama', 'Barack Obama'),
+
+    ('Michelle Obama', 'Michelle Obama'),
+
+    ('Hillary Clinton', 'Clinton'),
+    ('Hillary Clinton', 'Hillary Clinton'),
+
+    ('Bill Clinton', 'Bill Clinton'),
+
+    ('Vladimir Putin', 'Putin'),
+    ('Vladimir Putin', 'Vladimir Putin'),
+
+    ('Xi Jinping', 'Xi'),
+    ('Xi Jinping', 'Xi Jinping'),
+
+    ('Elon Musk', 'Musk'),
+    ('Elon Musk', 'Elon Musk'),
+
+    ('Robert F. Kennedy Jr.', 'RFK'),
+    ('Robert F. Kennedy Jr.', 'RFK Jr'),
+    ('Robert F. Kennedy Jr.', 'Robert Kennedy'),
+    ('Robert F. Kennedy Jr.', 'Kennedy'),
+
+    ('J.D. Vance', 'Vance'),
+    ('J.D. Vance', 'JD Vance'),
+
+    ('Ron DeSantis', 'DeSantis'),
+    ('Ron DeSantis', 'Ron DeSantis'),
+
+    ('Gavin Newsom', 'Newsom'),
+    ('Gavin Newsom', 'Gavin Newsom'),
+
+    ('Chuck Schumer', 'Schumer'),
+    ('Nancy Pelosi', 'Pelosi'),
+    ('Alexandria Ocasio-Cortez', 'AOC'),
+    ('Bernie Sanders', 'Bernie'),
+    ('Bernie Sanders', 'Sanders'),
+    ('Tucker Carlson', 'Tucker'),
+    ('Tucker Carlson', 'Carlson'),
+    ('Scott Adams', 'Scott Adams')
+),
+hits AS (
+  SELECT
+    m.person,
+    s.segment_pk
+  FROM name_map m
+  JOIN segments s
+    ON lower(s.text) LIKE '%' || lower(m.alias) || '%'
+)
+SELECT
+  person,
+  COUNT(DISTINCT segment_pk) AS segment_hits
+FROM hits
+GROUP BY person
+ORDER BY segment_hits DESC, person;
+
+person                    segment_hits
+------------------------  ------------
+Donald Trump              55751       
+Joe Biden                 19923       
+Xi Jinping                14050       
+Elon Musk                 6333        
+Vladimir Putin            4961        
+Kamala Harris             4777        
+Barack Obama              2474        
+Robert F. Kennedy Jr.     2150        
+Tucker Carlson            2122        
+Bernie Sanders            2033        
+Scott Adams               1955        
+Hillary Clinton           1805        
+J.D. Vance                1783        
+Ron DeSantis              1268        
+Alexandria Ocasio-Cortez  1235        
+Nancy Pelosi              1095        
+Gavin Newsom              1078        
+Chuck Schumer             553         
+Bill Clinton              340         
+Michelle Obama            108         
+
+======================
+
+If you want a cleaner ranking, I’d strongly recommend:
+	1.	use canonical grouping
+	2.	prefer full names plus common aliases
+	3.	avoid very short ambiguous aliases unless necessary
+
+You can also ask a different question: not “how many segments mention them?” but “how many total name mentions?” That’s a different metric.
+
+For that, use this pattern:
+
+WITH name_map(person, alias) AS (
+  VALUES
+    ('Donald Trump', 'Trump'),
+    ('Donald Trump', 'Donald Trump'),
+    ('Joe Biden', 'Biden'),
+    ('Joe Biden', 'Joe Biden'),
+    ('Elon Musk', 'Musk'),
+    ('Elon Musk', 'Elon Musk')
+),
+hits AS (
+  SELECT
+    person,
+    SUM(
+      (length(lower(text)) - length(replace(lower(text), lower(alias), '')))
+      / length(alias)
+    ) AS mention_count
+  FROM name_map
+  JOIN segments
+    ON lower(text) LIKE '%' || lower(alias) || '%'
+  GROUP BY person, alias
+)
+SELECT
+  person,
+  SUM(mention_count) AS total_mentions
+FROM hits
+GROUP BY person
+ORDER BY total_mentions DESC, person;
+person        total_mentions
+------------  --------------
+Donald Trump  59470         
+Joe Biden     24463         
+Elon Musk     10971         
+
+=======================
+
+# top ten 
+
+WITH counts AS (
+  SELECT 'Donald Trump' AS person,
+         SUM((length(lower(text)) - length(replace(lower(text), 'donald trump', ''))) / length('donald trump')) AS full_mentions,
+         SUM(CASE
+               WHEN lower(text) NOT LIKE '%donald trump%'
+               THEN (length(lower(text)) - length(replace(lower(text), 'trump', ''))) / length('trump')
+               ELSE 0
+             END) AS alias_mentions
+  FROM segments
+
+  UNION ALL
+
+  SELECT 'Joe Biden' AS person,
+         SUM((length(lower(text)) - length(replace(lower(text), 'joe biden', ''))) / length('joe biden')) AS full_mentions,
+         SUM(CASE
+               WHEN lower(text) NOT LIKE '%joe biden%'
+               THEN (length(lower(text)) - length(replace(lower(text), 'biden', ''))) / length('biden')
+               ELSE 0
+             END) AS alias_mentions
+  FROM segments
+
+  UNION ALL
+
+  SELECT 'Elon Musk' AS person,
+         SUM((length(lower(text)) - length(replace(lower(text), 'elon musk', ''))) / length('elon musk')) AS full_mentions,
+         SUM(CASE
+               WHEN lower(text) NOT LIKE '%elon musk%'
+               THEN (length(lower(text)) - length(replace(lower(text), 'musk', ''))) / length('musk')
+               ELSE 0
+             END) AS alias_mentions
+  FROM segments
+
+  UNION ALL
+
+  SELECT 'Kamala Harris' AS person,
+         SUM((length(lower(text)) - length(replace(lower(text), 'kamala harris', ''))) / length('kamala harris')) AS full_mentions,
+         SUM(CASE
+               WHEN lower(text) NOT LIKE '%kamala harris%'
+               THEN ((length(lower(text)) - length(replace(lower(text), 'kamala', ''))) / length('kamala'))
+                  + ((length(lower(text)) - length(replace(lower(text), 'harris', ''))) / length('harris'))
+               ELSE 0
+             END) AS alias_mentions
+  FROM segments
+
+  UNION ALL
+
+  SELECT 'Barack Obama' AS person,
+         SUM((length(lower(text)) - length(replace(lower(text), 'barack obama', ''))) / length('barack obama')) AS full_mentions,
+         SUM(CASE
+               WHEN lower(text) NOT LIKE '%barack obama%'
+               THEN (length(lower(text)) - length(replace(lower(text), 'obama', ''))) / length('obama')
+               ELSE 0
+             END) AS alias_mentions
+  FROM segments
+
+  UNION ALL
+
+  SELECT 'Hillary Clinton' AS person,
+         SUM((length(lower(text)) - length(replace(lower(text), 'hillary clinton', ''))) / length('hillary clinton')) AS full_mentions,
+         SUM(CASE
+               WHEN lower(text) NOT LIKE '%hillary clinton%'
+               THEN (length(lower(text)) - length(replace(lower(text), 'clinton', ''))) / length('clinton')
+               ELSE 0
+             END) AS alias_mentions
+  FROM segments
+
+  UNION ALL
+
+  SELECT 'Vladimir Putin' AS person,
+         SUM((length(lower(text)) - length(replace(lower(text), 'vladimir putin', ''))) / length('vladimir putin')) AS full_mentions,
+         SUM(CASE
+               WHEN lower(text) NOT LIKE '%vladimir putin%'
+               THEN (length(lower(text)) - length(replace(lower(text), 'putin', ''))) / length('putin')
+               ELSE 0
+             END) AS alias_mentions
+  FROM segments
+
+  UNION ALL
+
+  SELECT 'Tucker Carlson' AS person,
+         SUM((length(lower(text)) - length(replace(lower(text), 'tucker carlson', ''))) / length('tucker carlson')) AS full_mentions,
+         SUM(CASE
+               WHEN lower(text) NOT LIKE '%tucker carlson%'
+               THEN ((length(lower(text)) - length(replace(lower(text), 'tucker', ''))) / length('tucker'))
+                  + ((length(lower(text)) - length(replace(lower(text), 'carlson', ''))) / length('carlson'))
+               ELSE 0
+             END) AS alias_mentions
+  FROM segments
+
+  UNION ALL
+
+  SELECT 'Bernie Sanders' AS person,
+         SUM((length(lower(text)) - length(replace(lower(text), 'bernie sanders', ''))) / length('bernie sanders')) AS full_mentions,
+         SUM(CASE
+               WHEN lower(text) NOT LIKE '%bernie sanders%'
+               THEN ((length(lower(text)) - length(replace(lower(text), 'bernie', ''))) / length('bernie'))
+                  + ((length(lower(text)) - length(replace(lower(text), 'sanders', ''))) / length('sanders'))
+               ELSE 0
+             END) AS alias_mentions
+  FROM segments
+
+  UNION ALL
+
+  SELECT 'Scott Adams' AS person,
+         SUM((length(lower(text)) - length(replace(lower(text), 'scott adams', ''))) / length('scott adams')) AS full_mentions,
+         0 AS alias_mentions
+  FROM segments
+)
+SELECT
+  person,
+  full_mentions + alias_mentions AS total_mentions,
+  full_mentions,
+  alias_mentions
+FROM counts
+ORDER BY total_mentions DESC
+LIMIT 10;
+person           total_mentions  full_mentions  alias_mentions
+---------------  --------------  -------------  --------------
+Donald Trump     58801           629            58172         
+Joe Biden        20741           3580           17161         
+Elon Musk        6494            4447           2047          
+Vladimir Putin   5239            66             5173          
+Kamala Harris    4928            1948           2980          
+Barack Obama     2639            98             2541          
+Tucker Carlson   2198            893            1305          
+Bernie Sanders   2188            357            1831          
+Scott Adams      2001            2001           0             
+Hillary Clinton  1854            826            1028          
+
+===============
+
+
+
+
+

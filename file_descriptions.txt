@@ -1,0 +1,93 @@
+Here is the clean end-to-end description of each file, starting with transcript.txt and ending with chunks_final.json.
+
+transcript.txt
+
+This is the raw Whisper transcript for an episode.
+It is the original text artifact produced from the audio.
+It may contain transcription quirks, odd punctuation, repeated sounds, or misspellings.
+Its purpose is to preserve the first machine-readable version of the spoken content.
+We treat it as the original source, not the working text for later deterministic slicing.
+
+squashed.txt
+
+This is the normalized transcript derived deterministically from transcript.txt.
+Its purpose is to create a stable, single-stream text version for chunking and offset math.
+Whitespace is collapsed and formatting noise is removed in a consistent way, but the word stream is preserved.
+This becomes the canonical text stream for block boundaries.
+If later files need exact start/end positions for blocks, those positions refer to squashed.txt.
+
+chunks.txt
+
+This is the human-readable chunked version of squashed.txt.
+Its purpose is to break the long transcript into manageable thought-sized blocks that are easier to label and later search.
+The chunking is done deterministically in Python, aiming for a target size and preferring sentence boundaries when possible.
+The file usually includes visible block headers such as [BLOCK 1], [BLOCK 2], and so on.
+This is the text sent to the labeling model.
+
+chunks_manifest.json
+
+This is the structural map of the chunking process.
+Its purpose is to record exactly how chunks.txt was derived from squashed.txt.
+It stores the authoritative numeric boundaries for each block, especially src_start and src_end, which identify where each block lives inside squashed.txt.
+This file is the ground truth for reconstruction.
+If anything later needs to rebuild block text exactly, it should trust chunks_manifest.json plus squashed.txt, not the model.
+
+labels.json
+
+This is the semantic output from the labeling model.
+Its purpose is to attach a short human-meaningful label to each block.
+It should contain only lightweight AI output, typically block_index and label.
+The model is not responsible for offsets, anchors, or text reconstruction.
+This keeps the AI job small, fast, and reliable.
+
+chunks_final.json
+
+This is the final merged artifact for an episode.
+Its purpose is to combine deterministic structure with semantic labeling into one SQL-ready object.
+It is built by joining:
+squashed.txt for the actual block text,
+chunks_manifest.json for the numeric block boundaries,
+and labels.json for the semantic labels.
+
+This is the file that will eventually be loaded into SQLite.
+
+For each block, chunks_final.json should contain the information needed for browsing, indexing, and reconstruction. At minimum that means:
+block_index
+label
+src_start
+src_end
+text
+
+It may also include convenience fields such as:
+start_anchor
+end_anchor
+char_count
+word_count
+
+Those convenience fields should be computed deterministically in Python from the block text, not invented by the model.
+
+So the overall flow is:
+
+transcript.txt
+raw Whisper output
+
+squashed.txt
+deterministic normalized text stream
+
+chunks.txt
+human-readable block version of the transcript
+
+chunks_manifest.json
+authoritative numeric map of block boundaries
+
+labels.json
+AI-generated block labels only
+
+chunks_final.json
+final merged block data with text, offsets, and labels, ready for SQLite
+
+The important design principle is this:
+Python owns structure.
+The model owns only semantic naming.
+
+That is what keeps the system fast, reproducible, and safe to rebuild.

@@ -1,0 +1,348 @@
+Prediction → Full Context (core intelligence query)
+
+Find predictions and immediately see what was actually said around them.
+
+select
+  e.episode_id,
+  cast(substr(e.episode_id, 2) as integer) as ep_num,
+  e.date,
+  e.title,
+  p.value as prediction,
+  group_concat(s.text, ' ') as context
+from episodes e
+join json_each(e.predictions_json) p
+join segments s on s.episode_id = e.episode_id
+where s.seg_index between 20 and 80
+group by e.episode_id, p.value
+order by ep_num
+limit 20;
+
+episode_id = E0025
+    ep_num = 25
+      date = 2018-01-15
+     title = North Korea Walkouts and Presidential Tweets
+prediction = There should be a walk out and total breakdown of talks with North Korea, which is part of the negotiation process.
+   context =  time. Apparently he has some staff send some. But the ones that have the spelling  errors, you know came from president Trump himself which makes it authentic and  it feels direct. It feels personal. It feels real. So I would say this is a case  of not an intentional typo but rather somebody who has a system which is  guaranteed to have more typos accidental than you would if you had somebody  watching your tweets or doing them for you. So it's not that he doesn't  intentionally. It's that he doesn't care. And the occasional mistakes do make  it look more genuine, make him look more real for the type of people who are  supporting him anyway. However, today's misspelling there was another one  today on the name of reporter, New York Times reporter Maggie Habermann or  Habermann. I don't know the actual pronunciation. It's supposed to have either  two B's or one. I forget which one is the correct way. But here's the example  where the president spelled it wrong. I'm sure it was not intentional except in  the sense that he couldn't be bothered to make sure he spelled it right which is  funny in and of itself. It's not that it's not that he did it wrong  intentionally. It's that he didn't care. That's the story. The story is it didn't  matter that much to him. Was he wrong? No, he was not wrong because in spelling it  wrong. It just was a little bit more dismissive  over than if he'd spelled it right. So it's still worked in his favor. So it's  not that he doesn't intentionally. It's that he knows it's either not going to  matter or in some indirect way. It'll help him because it makes him look a  little more real, a little bit more dismissive in this case. It just doesn't  have a downside. All right, let me read the three tweets from this morning, I  guess. Now, if you don't know Maggie Heymerman, it helps to imagine her. Just  you know, put her in your mind if you can imagine her. All right. So I think the  topic was whether Michael Cohen would flip. You know, would he turn state  evidence or whatever it is and turn on the president, give up all the secrets.  So Trump says, the New York Times and a third rate reporter named Maggie Heymerman  known as a crook in the H. Flunky, who I don't speak to and have nothing to do  with, are going out of the way to destroy Michael Cohen and his relationship with  me and even if it means lying or making up stories. Now, he said, non-existent  sources and a drug slash drugged up loser who hates Michael, a fine person with a  wonderful family. Michael is a businessman, but the government loves him. So the  tweets too long to read the whole thing. But the point of it is that the president is  saying that Michael Cohen would never be the kind of person who would turn on him by  making up some story of something he did. Now, for the first time ever, I'm going to  disagree with Alan Dershowitz on a legal question, sort of a legal question.  Dershowitz said that Trump made a mistake by calling Michael Cohen just to check  in with him and see how he was doing, because since they're potentially on different sides  if Cohen flips because of the ongoing investigation, Alan Dershowitz says it's just a terrible mistake  for the president to have any contact with Cohen because it might look like he's trying  to work out a deal with him or whatever. Here's the first time I'm going to disagree  with Dershowitz that I can remember. And remember the Dershowitz rule. The Dershowitz rule  is that if I disagree with Alan Dershowitz, I'm wrong. So I'm going to tell you why I  disagree. At the same time, I'm telling you the Dershowitz rule says he's still probably  right. So listen to his advice, not mine, but yeah, I'm all stuffed up. If I blew my  nose, it wouldn't do anything right now. Somebody's telling me to blow my nose there.  So here's the thing. For a normal person, I would say that calling Michael Cohen would  be a mistake. Somebody said, you're banging me to blow my nose. I can't even do this.  And believe it or not, yeah, my first fetishes. Ah, that's better. So Dershowitz says they  never should have made that phone call. The president never should have called Michael Cohen.  Here's where I disagree because Michael Cohen and the president have a special relationship.  And if the president was worrying that Michael Cohen might flip on him, the best thing the  president could do is make a phone call that's risky and personal. The risky part is part  of it because if you don't understand the bro code, you wouldn't totally understand this. But the  president in taking a personal risk in calling Michael Cohen knew he was taking a risk and took  that risk to make Michael Cohen feel better. You get that? So the president took a conspicuous  risk, personal risk, a legal risk in calling Michael Cohen with only one purpose to make Michael  Cohen feel better. Now if you want Michael Cohen not to flip on you, can you think of a better  way to do it? Because now he's created a bro code situation where the president has now done  something risky for the benefit of Michael Cohen. He shouldn't have made that call. He only
+
+episode_id = E0039
+    ep_num = 39
+      date = 2018-01-29
+     title = Tasteless Jokes and Iran
+prediction = Whatever Iran does will look like it's making things worse but won't be in the long term.
+   context =  wolf's comedy routine and was it funny and was it too harsh and was it insulting was  it awkward and all those things I think everybody has covered everything they  need to say but because I am a professional humorist I feel I can't not comment  on this sort of sort of obligatory so here's my opinion on the whole thing jokes  are jokes jokes are jokes we shouldn't we shouldn't allow them to intrude  into our other feelings if we can prevent it now the problem here is that  there's a relationship between how funny how how naughty you can be how  offensive how how dirty you know how how awful and evil you can be and how funny  you are in other words if you're really really funny you can say awful things  to people and people will just say okay I get it that's that's pretty funny let  me give you an example I ran into my stepson just by coincidence I just ran  into him at my gym he's an adult and he was telling me that his friend and him  were talking about he saw some comments about me and there was some somebody on  Twitter I think who described me as looking like a toilet brush with a mouth now  it's an insult right it's it's talking about my appearance it's about as terrible  and insult as you can make but it's also funny it's also funny right and it's  funny enough that even I laughed at it's like oh toilet brush with a mouth  that's pretty good you know yeah I don't like that it's about me necessarily  but it's pretty good so both my stepson and I laughed about it just because it was  clever enough that it sort of went into a new category where it became art  instead of just being mean Michelle Wolf when she's doing comedy in front of a  mixed group meaning you know the people watching it at least on TV is you know  some conservatives some liberals some ends on women there's no way that her  humor could be as funny to every person there some people reportedly thought  the whole thing was hilarious I'm not going to doubt that because humor is  subjective I can tell you that most conservatives and my own opinion on it was  some of it was clever it didn't it didn't quite hit you know my personal laugh  reflex but it was clever you know it was humor was it also mean well here's the  thing had it been funnier I'm not sure we'd care in other words if if everybody  had thought it was funnier we would have just laughed and said ah yeah it's a  joke everybody makes fun of everybody you know the president has made fun of  people people make fun of people just let it go but it but there was  something about the way she she did it and something about the proximity you  know because you know if you're if your target is is sitting right there if I  feel from you it just feels like you're being mean instead of funny so the  physical distance had something to do with how we felt about it I would say it  was a totally unimportant night we shouldn't draw any any conclusions about it a  comedian intentionally was outrageous for the reasons that artists become  outrageous I can't hate that I can say that maybe she didn't execute as well as  maybe even she wanted to I don't know I don't want to meet her mind but I'm sure  it could have been a little bit better but no big deal I think that it reminded me a  lot of the the time that President Trump was sitting you know stoically in the  audience at that same event and he was the butt of just vicious jokes about  him and he didn't laugh he just sat there I felt a little bit the same watching  Sarah Huckabee Sanders sit there and take it and what I mean by that is I came  away with it I came away from it with an even more positive feeling about her  than I already had which was very positive keep in mind that whether you're  a liberal or a conservative or anything in between there's one thing we'd  all agree on Sarah Huckabee Sanders has the hardest job in the whole  freaking world now I know you're gonna say being Secretary of State sounds pretty  hard you know a lot of jobs sound pretty hard but being President Trump's  spokesperson and a woman you know which does make it harder let's let's be  honest about that does make it harder because of the the topics that he talks  about or has been blamed for that make a little extra topic so not only is she  doing the hardest job in the world but really well I think even her critics would  say she does you know great job at the hardest job in the world so how did she  come out of this whole thing classy you know better you know that's it no real  damage that the way she handled it was just classy like everything else she  does so I'll just let that go I heard just a moment ago that Iran is looking to  get out of the nuclear deal and nobody is quite sure what's going on there you  know so that's that's the news the day the question mark we'll find out what
+
+episode_id = E0042
+    ep_num = 42
+      date = 2018-02-01
+     title = DMZ idea for Korean Talks
+prediction = If the DMZ is chosen for talks, it will likely be because the deal is already done.
+   context =  If anybody thinks that President Trump is going to start negotiating when he shows up to the  meeting, then you probably haven't been paying attention. You know, the negotiations are probably  closer to done than starting. The president's going to go there to celebrate the completion.  And if you're going to celebrate the completion of the deal, you don't want to do that in Switzerland.  So here's why it's taking so long to figure out where we're doing it,  because it depends if we're talking or celebrating. And you don't make that decision because you're  still talking. And you don't know, you don't know, are we done? Are we, are we still talking?  Are we talking about the celebration? Are we talking about the negotiations?  So my prediction to you is that the fact that the president even floated the idea to the  public, hey, do you think we should have this meeting at the DMZ? Wink, wink. That's all for today.
+
+episode_id = E0042
+    ep_num = 42
+      date = 2018-02-01
+     title = DMZ idea for Korean Talks
+prediction = President Trump's suggestion indicates high confidence in reaching an agreement with North Korea.
+   context =  If anybody thinks that President Trump is going to start negotiating when he shows up to the  meeting, then you probably haven't been paying attention. You know, the negotiations are probably  closer to done than starting. The president's going to go there to celebrate the completion.  And if you're going to celebrate the completion of the deal, you don't want to do that in Switzerland.  So here's why it's taking so long to figure out where we're doing it,  because it depends if we're talking or celebrating. And you don't make that decision because you're  still talking. And you don't know, you don't know, are we done? Are we, are we still talking?  Are we talking about the celebration? Are we talking about the negotiations?  So my prediction to you is that the fact that the president even floated the idea to the  public, hey, do you think we should have this meeting at the DMZ? Wink, wink. That's all for today.
+
+
+# High-Signal Episodes Detector
+
+select
+  episode_id,
+  date,
+  title,
+  json_array_length(predictions_json) as preds,
+  json_array_length(notable_quotes_json) as quotes,
+  json_extract(evaluation_json, '$.impact') as impact
+from episodes
+where json_array_length(predictions_json) > 0
+   or json_extract(evaluation_json, '$.impact') >= 8
+order by impact desc, preds desc, quotes desc
+limit 25;
+
+episode_id = E2471
+      date = 2024-05-11
+     title = CWSA 05-11-24
+     preds = 2
+    quotes = 5
+    impact = 9
+
+episode_id = E1229
+      date = 2020-12-24
+     title = Ill Tell You What Keeps America Together and How the GoldenAge Cant be Stopped
+     preds = 2
+    quotes = 4
+    impact = 9
+
+episode_id = E0386
+      date = 2019-01-11
+     title = : The Giant Rip in the Fabric of Reality, Kamala Harris, Dale
+     preds = 2
+    quotes = 3
+    impact = 9
+
+episode_id = E0413
+      date = 2019-02-07
+     title = Talking to @Naval Ravikant About All the Important Stuff
+     preds = 2
+    quotes = 3
+    impact = 9
+
+episode_id = E0539
+      date = 2019-06-13
+     title = : Biden, Infrastructure Theater, Word-Thinking, Shadowbanning
+     preds = 2
+    quotes = 3
+    impact = 9
+
+
+# Topic Drilldown Across Entire Corpus
+
+select
+  j.value as topic,
+  count(*) as freq
+from episodes e,
+     json_each(e.topics_json) j
+group by topic
+order by freq desc
+limit 30;
+
+topic = Trump
+ freq = 495
+
+topic = AI
+ freq = 271
+
+topic = politics
+ freq = 230
+
+topic = Persuasion
+ freq = 170
+
+topic = Biden
+ freq = 169
+
+topic = persuasion
+ freq = 168
+
+topic = Elon Musk
+ freq = 159
+
+topic = Climate Change
+ freq = 129
+
+topic = China
+ freq = 116
+
+topic = CNN
+ freq = 104
+
+topic = climate change
+ freq = 100
+
+topic = Twitter
+ freq = 99
+
+topic = fake news
+ freq = 96
+
+topic = Ukraine
+ freq = 93
+
+topic = Joe Biden
+ freq = 89
+
+topic = Politics
+ freq = 88
+
+topic = election
+ freq = 76
+
+topic = Kamala Harris
+ freq = 76
+
+topic = coronavirus
+ freq = 73
+
+topic = Iran
+ freq = 73
+
+topic = Persuasion Techniques
+ freq = 72
+
+topic = elections
+ freq = 69
+
+topic = North Korea
+ freq = 67
+
+
+# Segment Playback Query (text + audio ready)
+
+select
+  s.episode_id,
+  c.title,
+  c.audio_url,
+  s.start_s,
+  s.end_s,
+  s.text
+from segments s
+join catalog c on s.episode_id = c.episode_id
+where s.episode_id = 'E0055'
+  and s.seg_index between 23 and 45
+order by s.seg_index;
+
+episode_id = E0055
+     title = Episode 55 - Structural Racism Plus Iran [MKh-WvBtG6E].mp3
+ audio_url = NULL
+   start_s = 168.4
+     end_s = 174.88
+      text =  resources and the network the investments the the hiring decisions and and all
+
+episode_id = E0055
+     title = Episode 55 - Structural Racism Plus Iran [MKh-WvBtG6E].mp3
+ audio_url = NULL
+   start_s = 174.88
+     end_s = 182.96
+      text =  of the the advice the mentoring and all the stuff you can get from white people
+
+episode_id = E0055
+     title = Episode 55 - Structural Racism Plus Iran [MKh-WvBtG6E].mp3
+ audio_url = NULL
+   start_s = 182.96
+     end_s = 188.24
+      text =  because the white people have lots of resources and as I said before the
+
+episode_id = E0055
+     title = Episode 55 - Structural Racism Plus Iran [MKh-WvBtG6E].mp3
+ audio_url = NULL
+   start_s = 188.24
+     end_s = 195.08
+      text =  greatest untapped resource in the world for African-Americans is that white
+
+episode_id = E0055
+     title = Episode 55 - Structural Racism Plus Iran [MKh-WvBtG6E].mp3
+ audio_url = NULL
+   start_s = 195.08
+     end_s = 200.0
+      text =  people like to help you know I say that like it's like maybe other people don't
+
+# Persuasion Pattern Extractor
+
+select
+  e.episode_id,
+  e.title,
+  pl.value as persuasion,
+  group_concat(s.text, ' ') as context
+from episodes e
+join json_each(e.persuasion_lessons_json) pl
+join segments s on s.episode_id = e.episode_id
+where s.seg_index between 30 and 90
+group by e.episode_id, pl.value
+order by e.episode_id
+limit 20;
+
+episode_id = E0022
+     title = Trump’s Personal Attorney’s Office Raided
+persuasion = Emotional appeals can sway public opinion.
+   context =  and the President and the Hush Payments and whatever else they might find in the personal  communications.  That is aligned.  You think Syria crossed the line?  Syria did not cross the line, okay, they crossed the line too.  But this is a frickin' line, all right, as a citizen, I am fully on board, Mr. President,  to get rid of all of them.  All of them.  I'd get rid of every frickin' person who even touched this decision, you know, and I'd  do it tomorrow.  I don't care if there's empty seats, I don't care if it causes a riot in the street.  I don't care if it puts a stain on his presidency, I don't care, I don't care anything.  This is the biggest firing defense I've ever seen, right?  I don't even care if they followed all the rules.  There's one person here who says he should let it play out.  You know, there's a bigger issue here.  He could let it play out because that, you know, maybe that's the best legal strategy.  But there's sort of a bigger issue here.  This crosses a line that is so striking to me that it just goes to overthrow of the  presidency kind of situation, but beyond that, I mean, that's just one of the lines.  So one of the lines that are crossing is they're just interfering with the people at this  point, all right?  The frickin' people elected this president, we did not elect a bunch of, you know, bureaucrats  to make his job impossible.  That's not good for me, all right?  I'm personally not better off with any of the stuff that's happening with Trump's lawyer.  Cross the line, cross the line.  Wow.  Did I see the latest cue post?  No, and I don't care about it.  They took his phone, computer, everything.  Yeah, you know, I'd close him down.  It may be too late at this point to ever get at any of that stuff back.  It might just be that at this point, it's just going to be what it's going to be because  once they've seized him, I don't know if you could ever get him back, you could just  keep firing people until somebody, until nobody wants to touch it anymore.  What would happen next if he fired them all?  Well, let's play that through.  Let's say the president, Trump just fires, I don't know how deep you'd have to fire.  But it seems like there's a lot of fire in there needs to be done.  At least Mueller.  I think Mueller's got to go now.  If was it Mueller, actually, they said the FBI, but does that mean it was Mueller?  I get a little confused about who does what over there.  But whoever sent the FBI after Trump's personal lawyer over the stormy Daniel stuff, oh my  God, way over the line.  So yes, somebody said what would happen if you were to fire the special counsel now?  And here's my answer.  I don't care.  I don't care.  I don't care.  You cross the line, you cross the line.  That's the whole point of a line, right?  The whole point of a line is that if you cross that line, I don't care anymore.  The implications are the implications, and if it causes other problems, you know, bring  them on.  It wasn't our decision.  Cross the line.  All right.  Wow.  Wow.
+
+episode_id = E0022
+     title = Trump’s Personal Attorney’s Office Raided
+persuasion = Highlighting perceived overreach can galvanize support.
+   context =  and the President and the Hush Payments and whatever else they might find in the personal  communications.  That is aligned.  You think Syria crossed the line?  Syria did not cross the line, okay, they crossed the line too.  But this is a frickin' line, all right, as a citizen, I am fully on board, Mr. President,  to get rid of all of them.  All of them.  I'd get rid of every frickin' person who even touched this decision, you know, and I'd  do it tomorrow.  I don't care if there's empty seats, I don't care if it causes a riot in the street.  I don't care if it puts a stain on his presidency, I don't care, I don't care anything.  This is the biggest firing defense I've ever seen, right?  I don't even care if they followed all the rules.  There's one person here who says he should let it play out.  You know, there's a bigger issue here.  He could let it play out because that, you know, maybe that's the best legal strategy.  But there's sort of a bigger issue here.  This crosses a line that is so striking to me that it just goes to overthrow of the  presidency kind of situation, but beyond that, I mean, that's just one of the lines.  So one of the lines that are crossing is they're just interfering with the people at this  point, all right?  The frickin' people elected this president, we did not elect a bunch of, you know, bureaucrats  to make his job impossible.  That's not good for me, all right?  I'm personally not better off with any of the stuff that's happening with Trump's lawyer.  Cross the line, cross the line.  Wow.  Did I see the latest cue post?  No, and I don't care about it.  They took his phone, computer, everything.  Yeah, you know, I'd close him down.  It may be too late at this point to ever get at any of that stuff back.  It might just be that at this point, it's just going to be what it's going to be because  once they've seized him, I don't know if you could ever get him back, you could just  keep firing people until somebody, until nobody wants to touch it anymore.  What would happen next if he fired them all?  Well, let's play that through.  Let's say the president, Trump just fires, I don't know how deep you'd have to fire.  But it seems like there's a lot of fire in there needs to be done.  At least Mueller.  I think Mueller's got to go now.  If was it Mueller, actually, they said the FBI, but does that mean it was Mueller?  I get a little confused about who does what over there.  But whoever sent the FBI after Trump's personal lawyer over the stormy Daniel stuff, oh my  God, way over the line.  So yes, somebody said what would happen if you were to fire the special counsel now?  And here's my answer.  I don't care.  I don't care.  I don't care.  You cross the line, you cross the line.  That's the whole point of a line, right?  The whole point of a line is that if you cross that line, I don't care anymore.  The implications are the implications, and if it causes other problems, you know, bring  them on.  It wasn't our decision.  Cross the line.  All right.  Wow.  Wow.
+
+episode_id = E0023
+     title = Scott Critiques the Zuckerberg Testimony in Real Time
+persuasion = Avoiding clear answers can be perceived as evasive.
+   context =  to say, Facebook is pretty much a platform for all ideas, minus the terrorism and the suicide  stuff, and the stuff nobody wants to hear, where at least most people don't want to hear. But it's  not the answer to the question about bias. It's because the bias would come in with how much  attention each of those messages get. So, and unfortunately, Zuckerberg looks panicked. His actual  face looks like he looks like he is ready to show some flop sweat there. He's pretty shiny,  and he's clearly insanely uncomfortable. So, I hate to see Facebook go down, but this is not  a good day for that at the moment. Okay, just look at your comments. Yeah, it's not a comfortable  place for an introvert. But you have to say on the plus side, he's very smart, very capable,  and he's very game. It's pretty brave even to show up. He probably could have done something  not to show up. Maybe not. I'm not sure how that works. If they tell you you have to show up,  do you have to? Maybe you do. So, I'm going to watch a little bit more of that. I just wanted to pop  in and say so far it looks like a disaster for Facebook, but I'm not sure everybody else has seen  the same thing I'm seeing, so we'll just keep watching.
+
+episode_id = E0023
+     title = Scott Critiques the Zuckerberg Testimony in Real Time
+persuasion = The effectiveness of a trial lawyer's questioning style.
+   context =  to say, Facebook is pretty much a platform for all ideas, minus the terrorism and the suicide  stuff, and the stuff nobody wants to hear, where at least most people don't want to hear. But it's  not the answer to the question about bias. It's because the bias would come in with how much  attention each of those messages get. So, and unfortunately, Zuckerberg looks panicked. His actual  face looks like he looks like he is ready to show some flop sweat there. He's pretty shiny,  and he's clearly insanely uncomfortable. So, I hate to see Facebook go down, but this is not  a good day for that at the moment. Okay, just look at your comments. Yeah, it's not a comfortable  place for an introvert. But you have to say on the plus side, he's very smart, very capable,  and he's very game. It's pretty brave even to show up. He probably could have done something  not to show up. Maybe not. I'm not sure how that works. If they tell you you have to show up,  do you have to? Maybe you do. So, I'm going to watch a little bit more of that. I just wanted to pop  in and say so far it looks like a disaster for Facebook, but I'm not sure everybody else has seen  the same thing I'm seeing, so we'll just keep watching.
+
+episode_id = E0024
+     title = The Tweet War With Russia
+persuasion = Posturing as tough can provide strategic flexibility.
+   context =  very unlikely and there seems to be some issue about getting people into  actually check. Now given that we don't know and that the world at least much of  the world suspects that it was Assad we have to act tough so the president is  moving our moda nearby and waiting for confirmation or deconformation is  that a word of who we did it. So the movingly assets into place we had to do  because we have to act tough. Now Russia had to push back because they've got  act tough too. So Russia said if you fire those missiles we'll shoot them out  of the air. Well that caused the president to have to talk tough. So he said watch  out Russia our missiles are so fast and smart that you won't even see them  coming. All right so so far all we've had is everybody saying what they're  supposed to say in the situation. Assad is supposed to deny it. We're supposed to  talk tough until we find out what's happening. Russia is supposed to talk  tough so everybody's just sort of doing what they're supposed to do in this  situation. I don't think the president has decided about shooting or not but  here's what's interesting. Russia said that they would shoot down the missiles  but they said more than that. They said they would shoot down the missiles and  also they might attack whatever they were fired from which could be cruisers  or battleships or I suppose aircraft. Now if Russia were to attack our  aircraft or ships as sea, chances are that's hard to contain that's real war  and you notice that the president's tweet did not threaten Russia's assets.  So Russia threatened the United States assets meaning that they would go  after whoever fired the missile and and Trump's tweet was more about the  missiles being good. So Trump did not say and will if anybody fires back at us  will go back at their you know their source. He didn't say that. So in the war  of words he did not escalate. So the war of words went  and then the president went and brought it back a level and then he retweeted  why can't we be friends. So he's already softened it twice I guess you could  say. Here's what I expect to command of this. I expect that we will not have a  confirmed identification of who fired of who did the chemical attack and if  that happens the president has now created a situation in which he can back  down because he's going in so strong that if it turns out that he can't confirm  who fired the gas and it just makes sense to let it go because you just can't  confirm it. He would not be backing down in a wimpy way he would be backing down  from the strongest possible position which is something you can back down  from. So backing down from a weak position just makes you look weaker backing  down for a super strong position which is how he's going into this gives you  the flexibility that you could say okay well had this been confirmed as the  Syrian government we sure would have sent some missiles in there and they  would be smart and nobody could stop him. So it's it's roughly the right setup  for this situation. Now the scary dramatic thing to lay to overlay on top of  this is that I can't imagine a president who would be more angry than this  president is right now. So you've got somebody who has the nuclear codes and his  personal lawyer just got got raided and he just went through a couple weeks  of stormy Daniels and Karen McDougal. So the president's had some events with  the the resignations everything that would make anybody pretty mad. So pretty  pretty mad. So here's what I would guess would happen to stock market might pull  back temporarily. I think we'll hang out for a while until we find out we don't  know who who was behind the gas attack and then if we're smart we'll back off.  Now it's still possible we'll fire some missiles so I don't have a  prediction about that but I think we're gonna need a pretty good reason. You know  if we fire them it might just be the show that we can but it seems like a bad  idea at this point. Oh that's good. Somebody says it was turkey. Well who knows?  So Alan Dershowitz and the president apparently had a meal together. So I'm  gonna agree with Pete Barara as I say his name that the that the FBI is attack if  you can call it that on Trump's personal lawyer is probably because they have  something more than just stormy Daniels stuff. So they must have something  more more than that but here's the problem. They wouldn't have more than that  except for Stormy Daniels except for the president as the president. So there's  probably no reason that his personal lawyer is part of this except that the  president as the president. So there's no way that I can be comfortable with  that even if it turns out the Cohen was guilty of some unrelated thing that we
+
+episode_id = E0024
+     title = The Tweet War With Russia
+persuasion = Strong initial positions allow for backing down without appearing weak.
+   context =  very unlikely and there seems to be some issue about getting people into  actually check. Now given that we don't know and that the world at least much of  the world suspects that it was Assad we have to act tough so the president is  moving our moda nearby and waiting for confirmation or deconformation is  that a word of who we did it. So the movingly assets into place we had to do  because we have to act tough. Now Russia had to push back because they've got  act tough too. So Russia said if you fire those missiles we'll shoot them out  of the air. Well that caused the president to have to talk tough. So he said watch  out Russia our missiles are so fast and smart that you won't even see them  coming. All right so so far all we've had is everybody saying what they're  supposed to say in the situation. Assad is supposed to deny it. We're supposed to  talk tough until we find out what's happening. Russia is supposed to talk  tough so everybody's just sort of doing what they're supposed to do in this  situation. I don't think the president has decided about shooting or not but  here's what's interesting. Russia said that they would shoot down the missiles  but they said more than that. They said they would shoot down the missiles and  also they might attack whatever they were fired from which could be cruisers  or battleships or I suppose aircraft. Now if Russia were to attack our  aircraft or ships as sea, chances are that's hard to contain that's real war  and you notice that the president's tweet did not threaten Russia's assets.  So Russia threatened the United States assets meaning that they would go  after whoever fired the missile and and Trump's tweet was more about the  missiles being good. So Trump did not say and will if anybody fires back at us  will go back at their you know their source. He didn't say that. So in the war  of words he did not escalate. So the war of words went  and then the president went and brought it back a level and then he retweeted  why can't we be friends. So he's already softened it twice I guess you could  say. Here's what I expect to command of this. I expect that we will not have a  confirmed identification of who fired of who did the chemical attack and if  that happens the president has now created a situation in which he can back  down because he's going in so strong that if it turns out that he can't confirm  who fired the gas and it just makes sense to let it go because you just can't  confirm it. He would not be backing down in a wimpy way he would be backing down  from the strongest possible position which is something you can back down  from. So backing down from a weak position just makes you look weaker backing  down for a super strong position which is how he's going into this gives you  the flexibility that you could say okay well had this been confirmed as the  Syrian government we sure would have sent some missiles in there and they  would be smart and nobody could stop him. So it's it's roughly the right setup  for this situation. Now the scary dramatic thing to lay to overlay on top of  this is that I can't imagine a president who would be more angry than this  president is right now. So you've got somebody who has the nuclear codes and his  personal lawyer just got got raided and he just went through a couple weeks  of stormy Daniels and Karen McDougal. So the president's had some events with  the the resignations everything that would make anybody pretty mad. So pretty  pretty mad. So here's what I would guess would happen to stock market might pull  back temporarily. I think we'll hang out for a while until we find out we don't  know who who was behind the gas attack and then if we're smart we'll back off.  Now it's still possible we'll fire some missiles so I don't have a  prediction about that but I think we're gonna need a pretty good reason. You know  if we fire them it might just be the show that we can but it seems like a bad  idea at this point. Oh that's good. Somebody says it was turkey. Well who knows?  So Alan Dershowitz and the president apparently had a meal together. So I'm  gonna agree with Pete Barara as I say his name that the that the FBI is attack if  you can call it that on Trump's personal lawyer is probably because they have  something more than just stormy Daniels stuff. So they must have something  more more than that but here's the problem. They wouldn't have more than that  except for Stormy Daniels except for the president as the president. So there's  probably no reason that his personal lawyer is part of this except that the  president as the president. So there's no way that I can be comfortable with  that even if it turns out the Cohen was guilty of some unrelated thing that we
+
+episode_id = E0025
+     title = North Korea Walkouts and Presidential Tweets
+persuasion = Accidental typos can make tweets seem more genuine.
+   context =  Habermann. I don't know the actual pronunciation. It's supposed to have either  two B's or one. I forget which one is the correct way. But here's the example  where the president spelled it wrong. I'm sure it was not intentional except in  the sense that he couldn't be bothered to make sure he spelled it right which is  funny in and of itself. It's not that it's not that he did it wrong  intentionally. It's that he didn't care. That's the story. The story is it didn't  matter that much to him. Was he wrong? No, he was not wrong because in spelling it  wrong. It just was a little bit more dismissive  over than if he'd spelled it right. So it's still worked in his favor. So it's  not that he doesn't intentionally. It's that he knows it's either not going to  matter or in some indirect way. It'll help him because it makes him look a  little more real, a little bit more dismissive in this case. It just doesn't  have a downside. All right, let me read the three tweets from this morning, I  guess. Now, if you don't know Maggie Heymerman, it helps to imagine her. Just  you know, put her in your mind if you can imagine her. All right. So I think the  topic was whether Michael Cohen would flip. You know, would he turn state  evidence or whatever it is and turn on the president, give up all the secrets.  So Trump says, the New York Times and a third rate reporter named Maggie Heymerman  known as a crook in the H. Flunky, who I don't speak to and have nothing to do  with, are going out of the way to destroy Michael Cohen and his relationship with  me and even if it means lying or making up stories. Now, he said, non-existent  sources and a drug slash drugged up loser who hates Michael, a fine person with a  wonderful family. Michael is a businessman, but the government loves him. So the  tweets too long to read the whole thing. But the point of it is that the president is  saying that Michael Cohen would never be the kind of person who would turn on him by  making up some story of something he did. Now, for the first time ever, I'm going to  disagree with Alan Dershowitz on a legal question, sort of a legal question.  Dershowitz said that Trump made a mistake by calling Michael Cohen just to check  in with him and see how he was doing, because since they're potentially on different sides  if Cohen flips because of the ongoing investigation, Alan Dershowitz says it's just a terrible mistake  for the president to have any contact with Cohen because it might look like he's trying  to work out a deal with him or whatever. Here's the first time I'm going to disagree  with Dershowitz that I can remember. And remember the Dershowitz rule. The Dershowitz rule  is that if I disagree with Alan Dershowitz, I'm wrong. So I'm going to tell you why I  disagree. At the same time, I'm telling you the Dershowitz rule says he's still probably  right. So listen to his advice, not mine, but yeah, I'm all stuffed up. If I blew my  nose, it wouldn't do anything right now. Somebody's telling me to blow my nose there.  So here's the thing. For a normal person, I would say that calling Michael Cohen would  be a mistake. Somebody said, you're banging me to blow my nose. I can't even do this.  And believe it or not, yeah, my first fetishes. Ah, that's better. So Dershowitz says they  never should have made that phone call. The president never should have called Michael Cohen.  Here's where I disagree because Michael Cohen and the president have a special relationship.  And if the president was worrying that Michael Cohen might flip on him, the best thing the  president could do is make a phone call that's risky and personal. The risky part is part  of it because if you don't understand the bro code, you wouldn't totally understand this. But the  president in taking a personal risk in calling Michael Cohen knew he was taking a risk and took  that risk to make Michael Cohen feel better. You get that? So the president took a conspicuous  risk, personal risk, a legal risk in calling Michael Cohen with only one purpose to make Michael  Cohen feel better. Now if you want Michael Cohen not to flip on you, can you think of a better  way to do it? Because now he's created a bro code situation where the president has now done  something risky for the benefit of Michael Cohen. He shouldn't have made that call. He only  did it for Cohen. Now obviously there's some self-interest here which is he showed his loyalty.  He's going to expect some loyalty back. But he's also probably indirectly suggested that you know  the the weight of the president is going to be on Cohen's side one way or another even though it  looks like a pardon is off the table. Now let me ask you this. I'm just brainstorming here. So my  understanding is that the president can't pardon if a state moves against somebody, the federal  government can't pardon that person. That's up to the state. But there's also this weird double  jeopardy rule that if the federal government convicted you of a crime, I think the state can't  convict you for exactly the same crime. Is that true? And if that's true, could the federal  government quickly convict him, get a pardon and then make it impossible for the state to  convict him? Because he'd already been pardoned by the federal government for the same crime and it
+
+episode_id = E0025
+     title = North Korea Walkouts and Presidential Tweets
+persuasion = Personal risks in communication can strengthen loyalty.
+   context =  Habermann. I don't know the actual pronunciation. It's supposed to have either  two B's or one. I forget which one is the correct way. But here's the example  where the president spelled it wrong. I'm sure it was not intentional except in  the sense that he couldn't be bothered to make sure he spelled it right which is  funny in and of itself. It's not that it's not that he did it wrong  intentionally. It's that he didn't care. That's the story. The story is it didn't  matter that much to him. Was he wrong? No, he was not wrong because in spelling it  wrong. It just was a little bit more dismissive  over than if he'd spelled it right. So it's still worked in his favor. So it's  not that he doesn't intentionally. It's that he knows it's either not going to  matter or in some indirect way. It'll help him because it makes him look a  little more real, a little bit more dismissive in this case. It just doesn't  have a downside. All right, let me read the three tweets from this morning, I  guess. Now, if you don't know Maggie Heymerman, it helps to imagine her. Just  you know, put her in your mind if you can imagine her. All right. So I think the  topic was whether Michael Cohen would flip. You know, would he turn state  evidence or whatever it is and turn on the president, give up all the secrets.  So Trump says, the New York Times and a third rate reporter named Maggie Heymerman  known as a crook in the H. Flunky, who I don't speak to and have nothing to do  with, are going out of the way to destroy Michael Cohen and his relationship with  me and even if it means lying or making up stories. Now, he said, non-existent  sources and a drug slash drugged up loser who hates Michael, a fine person with a  wonderful family. Michael is a businessman, but the government loves him. So the  tweets too long to read the whole thing. But the point of it is that the president is  saying that Michael Cohen would never be the kind of person who would turn on him by  making up some story of something he did. Now, for the first time ever, I'm going to  disagree with Alan Dershowitz on a legal question, sort of a legal question.  Dershowitz said that Trump made a mistake by calling Michael Cohen just to check  in with him and see how he was doing, because since they're potentially on different sides  if Cohen flips because of the ongoing investigation, Alan Dershowitz says it's just a terrible mistake  for the president to have any contact with Cohen because it might look like he's trying  to work out a deal with him or whatever. Here's the first time I'm going to disagree  with Dershowitz that I can remember. And remember the Dershowitz rule. The Dershowitz rule  is that if I disagree with Alan Dershowitz, I'm wrong. So I'm going to tell you why I  disagree. At the same time, I'm telling you the Dershowitz rule says he's still probably  right. So listen to his advice, not mine, but yeah, I'm all stuffed up. If I blew my  nose, it wouldn't do anything right now. Somebody's telling me to blow my nose there.  So here's the thing. For a normal person, I would say that calling Michael Cohen would  be a mistake. Somebody said, you're banging me to blow my nose. I can't even do this.  And believe it or not, yeah, my first fetishes. Ah, that's better. So Dershowitz says they  never should have made that phone call. The president never should have called Michael Cohen.  Here's where I disagree because Michael Cohen and the president have a special relationship.  And if the president was worrying that Michael Cohen might flip on him, the best thing the  president could do is make a phone call that's risky and personal. The risky part is part  of it because if you don't understand the bro code, you wouldn't totally understand this. But the  president in taking a personal risk in calling Michael Cohen knew he was taking a risk and took  that risk to make Michael Cohen feel better. You get that? So the president took a conspicuous  risk, personal risk, a legal risk in calling Michael Cohen with only one purpose to make Michael  Cohen feel better. Now if you want Michael Cohen not to flip on you, can you think of a better  way to do it? Because now he's created a bro code situation where the president has now done  something risky for the benefit of Michael Cohen. He shouldn't have made that call. He only  did it for Cohen. Now obviously there's some self-interest here which is he showed his loyalty.  He's going to expect some loyalty back. But he's also probably indirectly suggested that you know  the the weight of the president is going to be on Cohen's side one way or another even though it  looks like a pardon is off the table. Now let me ask you this. I'm just brainstorming here. So my  understanding is that the president can't pardon if a state moves against somebody, the federal  government can't pardon that person. That's up to the state. But there's also this weird double  jeopardy rule that if the federal government convicted you of a crime, I think the state can't  convict you for exactly the same crime. Is that true? And if that's true, could the federal  government quickly convict him, get a pardon and then make it impossible for the state to  convict him? Because he'd already been pardoned by the federal government for the same crime and it
+
+# Clean segment reconstruction
+
+select group_concat(text, ' ')
+from (
+  select text
+  from segments
+  where episode_id = 'E0055'
+    and seg_index between 23 and 45
+  order by seg_index
+);
+
+episode_id = E0022
+     title = Trump’s Personal Attorney’s Office Raided
+persuasion = Emotional appeals can sway public opinion.
+   context =  and the President and the Hush Payments and whatever else they might find in the personal  communications.  That is aligned.  You think Syria crossed the line?  Syria did not cross the line, okay, they crossed the line too.  But this is a frickin' line, all right, as a citizen, I am fully on board, Mr. President,  to get rid of all of them.  All of them.  I'd get rid of every frickin' person who even touched this decision, you know, and I'd  do it tomorrow.  I don't care if there's empty seats, I don't care if it causes a riot in the street.  I don't care if it puts a stain on his presidency, I don't care, I don't care anything.  This is the biggest firing defense I've ever seen, right?  I don't even care if they followed all the rules.  There's one person here who says he should let it play out.  You know, there's a bigger issue here.  He could let it play out because that, you know, maybe that's the best legal strategy.  But there's sort of a bigger issue here.  This crosses a line that is so striking to me that it just goes to overthrow of the  presidency kind of situation, but beyond that, I mean, that's just one of the lines.  So one of the lines that are crossing is they're just interfering with the people at this  point, all right?  The frickin' people elected this president, we did not elect a bunch of, you know, bureaucrats  to make his job impossible.  That's not good for me, all right?  I'm personally not better off with any of the stuff that's happening with Trump's lawyer.  Cross the line, cross the line.  Wow.  Did I see the latest cue post?  No, and I don't care about it.  They took his phone, computer, everything.  Yeah, you know, I'd close him down.  It may be too late at this point to ever get at any of that stuff back.  It might just be that at this point, it's just going to be what it's going to be because  once they've seized him, I don't know if you could ever get him back, you could just  keep firing people until somebody, until nobody wants to touch it anymore.  What would happen next if he fired them all?  Well, let's play that through.  Let's say the president, Trump just fires, I don't know how deep you'd have to fire.  But it seems like there's a lot of fire in there needs to be done.  At least Mueller.  I think Mueller's got to go now.  If was it Mueller, actually, they said the FBI, but does that mean it was Mueller?  I get a little confused about who does what over there.  But whoever sent the FBI after Trump's personal lawyer over the stormy Daniel stuff, oh my  God, way over the line.  So yes, somebody said what would happen if you were to fire the special counsel now?  And here's my answer.  I don't care.  I don't care.  I don't care.  You cross the line, you cross the line.  That's the whole point of a line, right?  The whole point of a line is that if you cross that line, I don't care anymore.  The implications are the implications, and if it causes other problems, you know, bring  them on.  It wasn't our decision.  Cross the line.  All right.  Wow.  Wow.
+
+episode_id = E0022
+     title = Trump’s Personal Attorney’s Office Raided
+persuasion = Highlighting perceived overreach can galvanize support.
+   context =  and the President and the Hush Payments and whatever else they might find in the personal  communications.  That is aligned.  You think Syria crossed the line?  Syria did not cross the line, okay, they crossed the line too.  But this is a frickin' line, all right, as a citizen, I am fully on board, Mr. President,  to get rid of all of them.  All of them.  I'd get rid of every frickin' person who even touched this decision, you know, and I'd  do it tomorrow.  I don't care if there's empty seats, I don't care if it causes a riot in the street.  I don't care if it puts a stain on his presidency, I don't care, I don't care anything.  This is the biggest firing defense I've ever seen, right?  I don't even care if they followed all the rules.  There's one person here who says he should let it play out.  You know, there's a bigger issue here.  He could let it play out because that, you know, maybe that's the best legal strategy.  But there's sort of a bigger issue here.  This crosses a line that is so striking to me that it just goes to overthrow of the  presidency kind of situation, but beyond that, I mean, that's just one of the lines.  So one of the lines that are crossing is they're just interfering with the people at this  point, all right?  The frickin' people elected this president, we did not elect a bunch of, you know, bureaucrats  to make his job impossible.  That's not good for me, all right?  I'm personally not better off with any of the stuff that's happening with Trump's lawyer.  Cross the line, cross the line.  Wow.  Did I see the latest cue post?  No, and I don't care about it.  They took his phone, computer, everything.  Yeah, you know, I'd close him down.  It may be too late at this point to ever get at any of that stuff back.  It might just be that at this point, it's just going to be what it's going to be because  once they've seized him, I don't know if you could ever get him back, you could just  keep firing people until somebody, until nobody wants to touch it anymore.  What would happen next if he fired them all?  Well, let's play that through.  Let's say the president, Trump just fires, I don't know how deep you'd have to fire.  But it seems like there's a lot of fire in there needs to be done.  At least Mueller.  I think Mueller's got to go now.  If was it Mueller, actually, they said the FBI, but does that mean it was Mueller?  I get a little confused about who does what over there.  But whoever sent the FBI after Trump's personal lawyer over the stormy Daniel stuff, oh my  God, way over the line.  So yes, somebody said what would happen if you were to fire the special counsel now?  And here's my answer.  I don't care.  I don't care.  I don't care.  You cross the line, you cross the line.  That's the whole point of a line, right?  The whole point of a line is that if you cross that line, I don't care anymore.  The implications are the implications, and if it causes other problems, you know, bring  them on.  It wasn't our decision.  Cross the line.  All right.  Wow.  Wow.
+
+episode_id = E0023
+     title = Scott Critiques the Zuckerberg Testimony in Real Time
+persuasion = Avoiding clear answers can be perceived as evasive.
+   context =  to say, Facebook is pretty much a platform for all ideas, minus the terrorism and the suicide  stuff, and the stuff nobody wants to hear, where at least most people don't want to hear. But it's  not the answer to the question about bias. It's because the bias would come in with how much  attention each of those messages get. So, and unfortunately, Zuckerberg looks panicked. His actual  face looks like he looks like he is ready to show some flop sweat there. He's pretty shiny,  and he's clearly insanely uncomfortable. So, I hate to see Facebook go down, but this is not  a good day for that at the moment. Okay, just look at your comments. Yeah, it's not a comfortable  place for an introvert. But you have to say on the plus side, he's very smart, very capable,  and he's very game. It's pretty brave even to show up. He probably could have done something  not to show up. Maybe not. I'm not sure how that works. If they tell you you have to show up,  do you have to? Maybe you do. So, I'm going to watch a little bit more of that. I just wanted to pop  in and say so far it looks like a disaster for Facebook, but I'm not sure everybody else has seen  the same thing I'm seeing, so we'll just keep watching.
+
+episode_id = E0023
+     title = Scott Critiques the Zuckerberg Testimony in Real Time
+persuasion = The effectiveness of a trial lawyer's questioning style.
+   context =  to say, Facebook is pretty much a platform for all ideas, minus the terrorism and the suicide  stuff, and the stuff nobody wants to hear, where at least most people don't want to hear. But it's  not the answer to the question about bias. It's because the bias would come in with how much  attention each of those messages get. So, and unfortunately, Zuckerberg looks panicked. His actual  face looks like he looks like he is ready to show some flop sweat there. He's pretty shiny,  and he's clearly insanely uncomfortable. So, I hate to see Facebook go down, but this is not  a good day for that at the moment. Okay, just look at your comments. Yeah, it's not a comfortable  place for an introvert. But you have to say on the plus side, he's very smart, very capable,  and he's very game. It's pretty brave even to show up. He probably could have done something  not to show up. Maybe not. I'm not sure how that works. If they tell you you have to show up,  do you have to? Maybe you do. So, I'm going to watch a little bit more of that. I just wanted to pop  in and say so far it looks like a disaster for Facebook, but I'm not sure everybody else has seen  the same thing I'm seeing, so we'll just keep watching.
+
+episode_id = E0024
+     title = The Tweet War With Russia
+persuasion = Posturing as tough can provide strategic flexibility.
+   context =  very unlikely and there seems to be some issue about getting people into  actually check. Now given that we don't know and that the world at least much of  the world suspects that it was Assad we have to act tough so the president is  moving our moda nearby and waiting for confirmation or deconformation is  that a word of who we did it. So the movingly assets into place we had to do  because we have to act tough. Now Russia had to push back because they've got  act tough too. So Russia said if you fire those missiles we'll shoot them out  of the air. Well that caused the president to have to talk tough. So he said watch  out Russia our missiles are so fast and smart that you won't even see them  coming. All right so so far all we've had is everybody saying what they're  supposed to say in the situation. Assad is supposed to deny it. We're supposed to  talk tough until we find out what's happening. Russia is supposed to talk  tough so everybody's just sort of doing what they're supposed to do in this  situation. I don't think the president has decided about shooting or not but  here's what's interesting. Russia said that they would shoot down the missiles  but they said more than that. They said they would shoot down the missiles and  also they might attack whatever they were fired from which could be cruisers  or battleships or I suppose aircraft. Now if Russia were to attack our  aircraft or ships as sea, chances are that's hard to contain that's real war  and you notice that the president's tweet did not threaten Russia's assets.  So Russia threatened the United States assets meaning that they would go  after whoever fired the missile and and Trump's tweet was more about the  missiles being good. So Trump did not say and will if anybody fires back at us  will go back at their you know their source. He didn't say that. So in the war  of words he did not escalate. So the war of words went  and then the president went and brought it back a level and then he retweeted  why can't we be friends. So he's already softened it twice I guess you could  say. Here's what I expect to command of this. I expect that we will not have a  confirmed identification of who fired of who did the chemical attack and if  that happens the president has now created a situation in which he can back  down because he's going in so strong that if it turns out that he can't confirm  who fired the gas and it just makes sense to let it go because you just can't  confirm it. He would not be backing down in a wimpy way he would be backing down  from the strongest possible position which is something you can back down  from. So backing down from a weak position just makes you look weaker backing  down for a super strong position which is how he's going into this gives you  the flexibility that you could say okay well had this been confirmed as the  Syrian government we sure would have sent some missiles in there and they  would be smart and nobody could stop him. So it's it's roughly the right setup  for this situation. Now the scary dramatic thing to lay to overlay on top of  this is that I can't imagine a president who would be more angry than this  president is right now. So you've got somebody who has the nuclear codes and his  personal lawyer just got got raided and he just went through a couple weeks  of stormy Daniels and Karen McDougal. So the president's had some events with  the the resignations everything that would make anybody pretty mad. So pretty  pretty mad. So here's what I would guess would happen to stock market might pull  back temporarily. I think we'll hang out for a while until we find out we don't  know who who was behind the gas attack and then if we're smart we'll back off.  Now it's still possible we'll fire some missiles so I don't have a  prediction about that but I think we're gonna need a pretty good reason. You know  if we fire them it might just be the show that we can but it seems like a bad  idea at this point. Oh that's good. Somebody says it was turkey. Well who knows?  So Alan Dershowitz and the president apparently had a meal together. So I'm  gonna agree with Pete Barara as I say his name that the that the FBI is attack if  you can call it that on Trump's personal lawyer is probably because they have  something more than just stormy Daniels stuff. So they must have something  more more than that but here's the problem. They wouldn't have more than that  except for Stormy Daniels except for the president as the president. So there's  probably no reason that his personal lawyer is part of this except that the  president as the president. So there's no way that I can be comfortable with  that even if it turns out the Cohen was guilty of some unrelated thing that we
+
+episode_id = E0024
+     title = The Tweet War With Russia
+persuasion = Strong initial positions allow for backing down without appearing weak.
+   context =  very unlikely and there seems to be some issue about getting people into  actually check. Now given that we don't know and that the world at least much of  the world suspects that it was Assad we have to act tough so the president is  moving our moda nearby and waiting for confirmation or deconformation is  that a word of who we did it. So the movingly assets into place we had to do  because we have to act tough. Now Russia had to push back because they've got  act tough too. So Russia said if you fire those missiles we'll shoot them out  of the air. Well that caused the president to have to talk tough. So he said watch  out Russia our missiles are so fast and smart that you won't even see them  coming. All right so so far all we've had is everybody saying what they're  supposed to say in the situation. Assad is supposed to deny it. We're supposed to  talk tough until we find out what's happening. Russia is supposed to talk  tough so everybody's just sort of doing what they're supposed to do in this  situation. I don't think the president has decided about shooting or not but  here's what's interesting. Russia said that they would shoot down the missiles  but they said more than that. They said they would shoot down the missiles and  also they might attack whatever they were fired from which could be cruisers  or battleships or I suppose aircraft. Now if Russia were to attack our  aircraft or ships as sea, chances are that's hard to contain that's real war  and you notice that the president's tweet did not threaten Russia's assets.  So Russia threatened the United States assets meaning that they would go  after whoever fired the missile and and Trump's tweet was more about the  missiles being good. So Trump did not say and will if anybody fires back at us  will go back at their you know their source. He didn't say that. So in the war  of words he did not escalate. So the war of words went  and then the president went and brought it back a level and then he retweeted  why can't we be friends. So he's already softened it twice I guess you could  say. Here's what I expect to command of this. I expect that we will not have a  confirmed identification of who fired of who did the chemical attack and if  that happens the president has now created a situation in which he can back  down because he's going in so strong that if it turns out that he can't confirm  who fired the gas and it just makes sense to let it go because you just can't  confirm it. He would not be backing down in a wimpy way he would be backing down  from the strongest possible position which is something you can back down  from. So backing down from a weak position just makes you look weaker backing  down for a super strong position which is how he's going into this gives you  the flexibility that you could say okay well had this been confirmed as the  Syrian government we sure would have sent some missiles in there and they  would be smart and nobody could stop him. So it's it's roughly the right setup  for this situation. Now the scary dramatic thing to lay to overlay on top of  this is that I can't imagine a president who would be more angry than this  president is right now. So you've got somebody who has the nuclear codes and his  personal lawyer just got got raided and he just went through a couple weeks  of stormy Daniels and Karen McDougal. So the president's had some events with  the the resignations everything that would make anybody pretty mad. So pretty  pretty mad. So here's what I would guess would happen to stock market might pull  back temporarily. I think we'll hang out for a while until we find out we don't  know who who was behind the gas attack and then if we're smart we'll back off.  Now it's still possible we'll fire some missiles so I don't have a  prediction about that but I think we're gonna need a pretty good reason. You know  if we fire them it might just be the show that we can but it seems like a bad  idea at this point. Oh that's good. Somebody says it was turkey. Well who knows?  So Alan Dershowitz and the president apparently had a meal together. So I'm  gonna agree with Pete Barara as I say his name that the that the FBI is attack if  you can call it that on Trump's personal lawyer is probably because they have  something more than just stormy Daniels stuff. So they must have something  more more than that but here's the problem. They wouldn't have more than that  except for Stormy Daniels except for the president as the president. So there's  probably no reason that his personal lawyer is part of this except that the  president as the president. So there's no way that I can be comfortable with  that even if it turns out the Cohen was guilty of some unrelated thing that we
+
+
+# What these 5 give you
+
+Together they cover:
+	1.	Prediction → reality
+	2.	Episode prioritization
+	3.	Topic mapping
+	4.	Playback system
+	5.	Persuasion analysis
+
+That’s:
+👉 search
+👉 structure
+👉 meaning
+👉 verification
+👉 application
+
+⸻
+
+If you want next level:
+
+👉 we turn these into one-command tools (aliases / scripts) so you’re not typing SQL every time.

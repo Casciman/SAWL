@@ -1,0 +1,412 @@
+PRAGMA table_info(chunks);
+cid  name          type     notnull  dflt_value  pk
+---  ------------  -------  -------  ----------  --
+0    block_id      TEXT     0        NULL        1 
+1    episode       TEXT     1        NULL        0 
+2    block_index   INTEGER  1        NULL        0 
+3    label         TEXT     1        NULL        0 
+4    src_start     INTEGER  1        NULL        0 
+5    src_end       INTEGER  1        NULL        0 
+6    start_anchor  TEXT     0        NULL        0 
+7    end_anchor    TEXT     0        NULL        0 
+8    text          TEXT     1        NULL        0 
+9    char_count    INTEGER  1        NULL        0 
+10   word_count    INTEGER  1        NULL        0 
+
+===================
+# we are going to change the episode column to only include the first 5 characters, which represent the episode number. 
+# this makes joins easier 
+# We will also count how many rows there are for each episode number.
+
+SELECT episode AS old_episode,
+       substr(episode, 1, 5) AS new_episode,
+       COUNT(*) AS row_count
+FROM chunks
+WHERE episode LIKE 'E____-%'
+GROUP BY episode
+ORDER BY episode
+LIMIT 20;
+old_episode     new_episode  row_count
+--------------  -----------  ---------
+E0022-20180112  E0022        7        
+E0023-20180113  E0023        2        
+E0024-20180114  E0024        5        
+E0025-20180115  E0025        6        
+E0026-20180116  E0026        9        
+E0027-20180117  E0027        6        
+E0028-20180118  E0028        6        
+E0029-20180119  E0029        24       
+E0030-20180120  E0030        2        
+E0031-20180121  E0031        16       
+E0032-20180122  E0032        7        
+E0033-20180123  E0033        20       
+E0034-20180124  E0034        12       
+E0035-20180125  E0035        9        
+E0036-20180126  E0036        7        
+E0037-20180127  E0037        11       
+E0038-20180128  E0038        4        
+E0039-20180129  E0039        11       
+E0040-20180130  E0040        5        
+E0041-20180131  E0041        12       
+
+
+*** reminder ***
+
+This sql changed the episaode id within chunks -- it was not like this in the original build script.
+
+UPDATE chunks
+SET episode = substr(episode, 1, 5)
+WHERE episode LIKE 'E____-%';
+
+typical join on episode.
+
+SELECT
+  c.block_id,
+  c.episode,
+  c.block_index,
+  c.label,
+  c.src_start,
+  c.src_end,
+  c.start_anchor,
+  c.end_anchor,
+  c.word_count,
+  e.episode_id,
+  e.date
+FROM chunks c
+JOIN episodes e
+  ON c.episode = e.episode_id
+ORDER BY c.episode, c.block_index
+LIMIT 50;
+block_id   episode  block_index  label                                          src_start  src_end  start_anchor                          end_anchor                                   word_count  episode_id  date      
+---------  -------  -----------  ---------------------------------------------  ---------  -------  ------------------------------------  -------------------------------------------  ----------  ----------  ----------
+E0022_001  E0022    1            trump lawyer raid firing support               0          2033     Well, I thought it was going          might find in the personal communications.   383         E0022       2018-01-12
+E0022_002  E0022    2            trump firing controversy line crossing         2033       4073     That is aligned. You think Syria      how deep you'd have to fire.                 392         E0022       2018-01-12
+E0022_003  E0022    3            mueller firing debate fbi raid                 4073       6093     But it seems like there's a           if it doesn't happen right away.             391         E0022       2018-01-12
+E0022_004  E0022    4            media coverage trump firing debate             6093       8156     Wow. Let me see what the              the world that we can tolerate?              392         E0022       2018-01-12
+E0022_005  E0022    5            firing controversy protests legal strategy     8156       10219    Can you tolerate this environment? I  to vote if I tried to?                       385         E0022       2018-01-12
+E0022_006  E0022    6            repercussions debate political accountability  10219      12298    It would be a lot. And                is kind of unique, isn't it?                 379         E0022       20
+
+============
+
+SELECT COUNT(*) AS total_rows,
+       COUNT(DISTINCT block_id) AS distinct_block_ids
+FROM chunks;
+total_rows  distinct_block_ids
+----------  ------------------
+67212       67212             
+
+
+searching through labels for California
+
+SELECT COUNT(*) AS california_label_count
+FROM chunks
+WHERE label LIKE '%California%';
+california_label_count
+----------------------
+277                   
+
+====================
+
+SELECT block_id, episode, block_index, label
+FROM chunks
+WHERE lower(label) LIKE '%california%'
+ORDER BY episode, block_index;
+block_id   episode  block_index  label                                                       
+---------  -------  -----------  ------------------------------------------------------------
+E0051_029  E0051    29           california relaxed new york provocative                     
+
+E0095_007  E0095    7            california politics news                                    
+
+E0132_015  E0132    15           california republican covert network                        
+
+E0242_003  E0242    3            california rehab law chinese executives                     
+
+E0294_001  E0294    1            california air quality forest fires discussion              
+
+E0296_001  E0296    1            california wildfires political debate                       
+
+E0311_001  E0311    1            california wildfire update                                  
+
+E0560_007  E0560    7            california negative stereotypes versus reality              
+
+E0650_005  E0650    5            california nuclear energy debate             
+
+=========
+
+Count labels by keyword families:
+
+SELECT
+  SUM(CASE WHEN lower(label) LIKE '%california%' THEN 1 ELSE 0 END) AS california,
+  SUM(CASE WHEN lower(label) LIKE '%trump%' THEN 1 ELSE 0 END) AS trump,
+  SUM(CASE WHEN lower(label) LIKE '%biden%' THEN 1 ELSE 0 END) AS biden,
+  SUM(CASE WHEN lower(label) LIKE '%ai%' THEN 1 ELSE 0 END) AS ai,
+  SUM(CASE WHEN lower(label) LIKE '%energy%' THEN 1 ELSE 0 END) AS energy
+FROM chunks;
+california  trump  biden  ai    energy
+----------  -----  -----  ----  ------
+277         5551   1853   8155  617   
+
+That means label-search is probably the right first-pass tool for topic discovery.
+
+A few high-value queries from here:
+
+Top labels for a topic:
+
+SELECT block_id, episode, block_index, label
+FROM chunks
+WHERE lower(label) LIKE '%ai%'
+ORDER BY episode, block_index
+LIMIT 100;
+block_id   episode  block_index  label                                                 
+---------  -------  -----------  ------------------------------------------------------
+E0022_001  E0022    1            trump lawyer raid firing support                      
+E0022_003  E0022    3            mueller firing debate fbi raid                        
+E0028_002  E0028    2            buzzfeed men rights claim                             
+E0029_011  E0029    11           fake news claims controversies                        
+E0029_012  E0029    12           media misrepresentation of controversial claims       
+E0031_015  E0031    15           syria chemical weapon attack claim                    
+E0040_002  E0040    2            iranian claim credibility debate                      
+E0045_002  E0045    2            audience fails to grasp giuliani point                
+E0045_003  E0045    3            confusion over ivanka popularity claim                
+E0051_011  E0051    11           blockchain governance model                           
+E0052_003  E0052    3            economic optimism and misleading claims               
+E0054_002  E0054    2            missiles nuclear support terrorism det
+
+
+For ai as a standalone token:
+
+SELECT COUNT(*) AS ai_label_count
+FROM chunks
+WHERE lower(label) = 'ai'
+   OR lower(label) LIKE 'ai %'
+   OR lower(label) LIKE '% ai'
+   OR lower(label) LIKE '% ai %'
+   OR lower(label) LIKE '%artificial intelligence%';
+ai_label_count
+--------------
+2070          
+
+SELECT block_id, episode, block_index, label
+FROM chunks
+WHERE lower(label) = 'ai'
+   OR lower(label) LIKE 'ai %'
+   OR lower(label) LIKE '% ai'
+   OR lower(label) LIKE '% ai %'
+   OR lower(label) LIKE '%artificial intelligence%'
+ORDER BY episode, block_index
+LIMIT 100;
+
+SELECT block_id, episode, block_index, label
+FROM chunks
+WHERE lower(label) = 'ai'
+   OR lower(label) LIKE 'ai %'
+   OR lower(label) LIKE '% ai'
+   OR lower(label) LIKE '% ai %'
+   OR lower(label) LIKE '%artificial intelligence%'
+ORDER BY episode, block_index
+LIMIT 100;
+block_id   episode  block_index  label                                             
+---------  -------  -----------  --------------------------------------------------
+E0167_013  E0167    13           gps mapping artificial intelligence               
+E0204_008  E0204    8            ai algorithm control future                       
+E0204_012  E0204    12           ai conscience through viral intervention          
+E0204_013  E0204    13           human future space colonization ai integration    
+E0204_014  E0204    14           immortality ai terraforming godlike humanity      
+E0206_003  E0206    3            ai resurrecting deceased personalities            
+E0215_018  E0215    18           ai superintelligence climate concerns             
+E0215_019  E0215    19           ai climate repair narrative                       
+E0215_020  E0215    20           ai motivation human integration                   
+E0215_021  E0215    21           neural link cyborg ai future                      
+E0217_006  E0217    6            ai influence on human decision making             
+E0217_007  E0217    7            ai persuasive influence risk                      
+E0303_001  E0303    1            artificial intelligence impossibility             
+E0318_016  E0318    16           ai human intelligence replication challenge       
+E0389_004  E0389    4            ai driven career learning                         
+E0413_019  E0413    19           ai emergence through social media                 
+E0520_013  E0520    13           fusion power ai acceleration                      
+E0545_020  E0545    20           ai impact on creative jobs                        
+E0545_021  E0545    21           ai humor creation process                         
+E0545_023  E0545    23           ai creative job future forecast                   
+E0545_024  E0545    24           ai writing and political influence                
+E0558_006  E0558    6            ai human creativity debate                        
+E0558_007  E0558    7            talent stack ai limitations                       
+E0558_008  E0558    8            ai creativity political bias                      
+E0558_009  E0558    9            ai creative iteration in art                      
+E0558_010  E0558    10           future ai art dominance                           
+E0558_016  E0558    16           ai based gun violence prevention                  
+E0558_017  E0558    17           ai shooter detection deprogramming algorithm      
+E0576_006  E0576    6            ai judicial accountability                        
+E0603_010  E0603    10           ai value programming debate                       
+E0603_012  E0603    12           ai rationality myth and politics                  
+E0629_009  E0629    9            ai belief change detection                        
+E0629_010  E0629    10           ai illusion debate trade policy                   
+E0645_015  E0645    15           ai art human creativity comparison                
+E0653_001  E0653    1            ai deepfake crime scandal                         
+E0657_007  E0657    7            ai personalized medical record system             
+E0657_008  E0657    8            personalized ai medical diagnosis                 
+E0725_018  E0725    18           ai persona copyright plan                         
+E0732_013  E0732    13           ai impact on healthcare                           
+E0742_011  E0742    11           robot touch ai debate                             
+E0792_015  E0792    15           clearview ai privacy surveillance technology      
+E0798_002  E0798    2            interview with investor on clearview ai           
+E0798_003  E0798    3            clearview ai functionality and use cases          
+E0896_004  E0896    4            ai governance public decisionmaking               
+E0930_001  E0930    1            bedtime stories ai experiment                     
+E0973_015  E0973    15           digital brain interface ai                        
+E1074_021  E1074    21           ai control algorithmic governance                 
+E1074_022  E1074    22           ai intention intelligence definition              
+E1074_023  E1074    23           ai intention turing test                          
+E1080_020  E1080    20           ai ad creation controversy                        
+E1080_021  E1080    21           ai ad automation politics                         
+E1109_014  E1109    14           darpa ai information warfare tool                 
+E1113_012  E1113    12           ai writing detection techniques                   
+E1113_014  E1113    14           ai hoax writing critique                          
+E1113_019  E1113    19           ai targeted political attack                      
+E1123_002  E1123    2            ai driven cyber influence and data                
+E1123_012  E1123    12           ai control human addiction analogy                
+E1123_013  E1123    13           ai addiction controlling human decisions          
+E1123_014  E1123    14           ai controlling human thought processes            
+E1124_019  E1124    19           ai influence social unrest                        
+E1124_020  E1124    20           ai driven politics campaign finance               
+E1126_016  E1126    16           ai driven conflict reproduction                   
+E1126_017  E1126    17           ai takeover coronavirus border strategy           
+E1131_004  E1131    4            ai control social media influence                 
+E1131_005  E1131    5            ai profit control algorithm access                
+E1131_006  E1131    6            ai lobbying government influence                  
+E1131_007  E1131    7            ai race framing news story                        
+E1131_008  E1131    8            ai skill stack versus race bias                   
+E1131_009  E1131    9            ai pandemic influence race bias                   
+E1131_010  E1131    10           ai profits pandemic stock market                  
+E1131_018  E1131    18           ai impact political discourse                     
+E1152_029  E1152    29           ai driven demonetization process                  
+E1153_017  E1153    17           ai free will debate and disney pandemic comparison
+E1159_014  E1159    14           ai influence armed protest risk                   
+E1161_010  E1161    10           ai decision making conspiracy theory              
+E1161_011  E1161    11           ai versus human political strategy                
+E1170_022  E1170    22           future hologram ai relatives                      
+E1176_010  E1176    10           ai algorithm election influence                   
+E1202_023  E1202    23           ai takeover human control                         
+E1202_024  E1202    24           ai influencing personal decisions                 
+E1212_017  E1212    17           ai algorithm censorship debate                    
+E1213_023  E1213    23           ai creating artificial news drama                 
+E1213_024  E1213    24           trump disinfectant rumor spread by ai             
+E1245_002  E1245    2            ai bias and nuclear energy                        
+E1300_016  E1300    16           ai personal chatbot mirroring identity            
+E1300_017  E1300    17           ai digital friend loneliness                      
+E1300_018  E1300    18           ai friend market value                            
+E1306_016  E1306    16           ai turing test critique                           
+E1306_017  E1306    17           ai bias selfish behavior                          
+E1310_004  E1310    4            deepfake singing ai technology                    
+E1352_004  E1352    4            nextdoor ai racism filter                         
+E1367_020  E1367    20           digital ai nft soul ownership                     
+E1429_002  E1429    2            robotized food production and ai                  
+E1438_011  E1438    11           ai personality deceased representation            
+E1461_004  E1461    4            ai simulation question interview                  
+E1489_006  E1489    6            ai racism mislabeling police video                
+E1489_007  E1489    7            ai bias police black men primates                 
+E1503_011  E1503    11           artificial intelligence evolution reproduction    
+E1503_012  E1503    12           ai addiction human reproduction                   
+E1514_008  E1514    8            ai robot arm experiment             
+
+
+more generic way of doing this. We pad the label with spaces on either side, and then search for " ai " to ensure we are only matching ai as a standalone token, and not as part of another word. 
+We also include the full term "artificial intelligence" in case that is used as a label.
+
+SELECT COUNT(*) AS ai_label_count
+FROM (
+  SELECT ' ' || lower(label) || ' ' AS padded_label
+  FROM chunks
+)
+WHERE padded_label LIKE '% ai %'
+   OR padded_label LIKE '% artificial intelligence %';
+
+===============
+
+SELECT block_id, episode, block_index, label
+FROM chunks
+WHERE lower(label) LIKE '%california%';
+block_id   episode  block_index  label                                                       
+---------  -------  -----------  ------------------------------------------------------------
+E0051_029  E0051    29           california relaxed new york provocative                     
+
+E0095_007  E0095    7            california politics news                                    
+
+E0132_015  E0132    15           california republican covert network                        
+
+E0242_003  E0242    3            california rehab law chinese executives                     
+
+E0294_001  E0294    1            california air quality forest fires discussion              
+
+E0296_001  E0296    1            california wildfires political debate                       
+
+E0311_001  E0311    1            california wildfire update                                  
+
+===============
+
+SELECT COUNT(*) AS california_chunks
+FROM chunks
+WHERE lower(label) LIKE '%california%';
+california_chunks
+-----------------
+277              
+
+And if you want to see whether California tends to be an opening topic:
+
+SELECT block_index, COUNT(*) AS cnt
+FROM chunks
+WHERE lower(label) LIKE '%california%'
+GROUP BY block_index
+ORDER BY cnt DESC, block_index;
+block_index  cnt
+-----------  ---
+1            20 
+2            18 
+15           17 
+9            16 
+11           15 
+3            12 
+5            12 
+21           12 
+14           11 
+16           11 
+4            10 
+18           10 
+24           10 
+7            9  
+12           9  
+8            8  
+10           8  
+17           8  
+20           8  
+6            7  
+19           6  
+22           6  
+23           5  
+25           5  
+26           5  
+13           4  
+27           4  
+29           4  
+32           4  
+28           2  
+31           1  
+
+A better summary query is to collapse into thirds:
+
+SELECT
+  CASE
+    WHEN block_index <= 10 THEN 'early'
+    WHEN block_index <= 20 THEN 'middle'
+    ELSE 'late'
+  END AS section,
+  COUNT(*) AS cnt
+FROM chunks
+WHERE lower(label) LIKE '%california%'
+GROUP BY section
+ORDER BY section;
+section  cnt
+-------  ---
+early    120
+late     58 
+middle   99 
+
