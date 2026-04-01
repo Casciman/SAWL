@@ -4,3 +4,7 @@ __pycache__/
 .DS_Store
 data/episodes/**/analysis/episode.json
 run*.log
+data/*.sqlite
+*.log
+*.jsonl
+Text-Search.docx
