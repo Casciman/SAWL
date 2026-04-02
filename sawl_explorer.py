@@ -29,6 +29,7 @@ from pygments import style
 
 from click import style
 import shlex
+import calendar
 
 
 # ------------------------------ helpers ------------------------------
@@ -124,8 +125,16 @@ def row_to_episode_dict(row: sqlite3.Row) -> dict:
 TOKEN_SPLIT_RE = re.compile(r"(\|)|(?:\bOR\b)|(\+)|(?:\bAND\b)", re.IGNORECASE)
 WORD_RE = re.compile(r"\S+")
 
+EP_RANGE_RE = re.compile(r"^\s*E?(\d{1,5})\s*-\s*E?(\d{1,5})\s*$", re.IGNORECASE)
 
+DATE_RANGE_RE = re.compile(
+    r"^\s*(\d{4}-\d{2}-\d{2})\s*(?:-|to)\s*(\d{4}-\d{2}-\d{2})\s*$",
+    re.IGNORECASE,
+)
 
+DATE_YEAR_RE = re.compile(r"^\d{4}$")
+DATE_MONTH_RE = re.compile(r"^\d{4}-\d{2}$")
+DATE_FULL_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 def normalize_expr(text: str) -> list[list[str]]:
     """
@@ -191,6 +200,79 @@ def compile_contains_expr(column: str, text: str) -> tuple[str, list[str]]:
             params.append(f"%{term}%")
         or_parts.append("(" + " AND ".join(and_parts) + ")")
     return "(" + " OR ".join(or_parts) + ")", params
+
+def compile_episode_expr(text: str) -> tuple[str, list[int | str]]:
+    """
+    Special handling for episode_id.
+
+    If the whole field is a range like:
+      E0153 - E0297
+      0123 - 297
+      123-297
+
+    compile to a numeric range over the integer part of episode_id.
+
+    Otherwise, fall back to normal contains-expression logic.
+    """
+    s = (text or "").strip()
+    if not s:
+        return "", []
+
+    m = EP_RANGE_RE.match(s)
+    if m:
+        a = int(m.group(1))
+        b = int(m.group(2))
+        lo, hi = sorted((a, b))
+
+        clause = (
+            "(CAST(SUBSTR(episode_id, 2) AS INTEGER) >= ? "
+            "AND CAST(SUBSTR(episode_id, 2) AS INTEGER) <= ?)"
+        )
+        return clause, [lo, hi]
+
+    return compile_contains_expr("episode_id", s)
+
+
+
+def compile_date_expr(text: str) -> tuple[str, list[str]]:
+    """
+    Date handling rules:
+
+    Single-value forms:
+      YYYY            -> whole year
+      YYYY-MM         -> whole month
+      YYYY-MM-DD      -> exact date
+
+    Range forms (inclusive, full dates only):
+      YYYY-MM-DD - YYYY-MM-DD
+      YYYY-MM-DD to YYYY-MM-DD
+
+    No mixed-precision ranges.
+    """
+    s = (text or "").strip()
+    if not s:
+        return "", []
+
+    m = DATE_RANGE_RE.match(s)
+    if m:
+        a = m.group(1)
+        b = m.group(2)
+        lo, hi = sorted((a, b))
+        return "(date >= ? AND date <= ?)", [lo, hi]
+
+    if DATE_YEAR_RE.match(s):
+        return "(date >= ? AND date <= ?)", [f"{s}-01-01", f"{s}-12-31"]
+
+    if DATE_MONTH_RE.match(s):
+        year, month = s.split("-")
+        last_day = calendar.monthrange(int(year), int(month))[1]
+        return "(date >= ? AND date <= ?)", [f"{s}-01", f"{s}-{last_day:02d}"]
+
+    if DATE_FULL_RE.match(s):
+        return "(date = ?)", [s]
+
+    # fallback: plain contains, if you want to keep loose behavior
+    return compile_contains_expr("date", s)
 
 
 # ------------------------------ Explorer App ------------------------------
@@ -314,8 +396,8 @@ class SAWLExplorer(tk.Tk):
         form.columnconfigure(3, weight=1)
 
         r = 0
-        self._add_entry(form, r, "Episode # contains", "episode_id", 0)
-        self._add_entry(form, r, "Date contains", "date", 2)
+        self._add_entry(form, r, "Episode Range", "episode_id", 0)
+        self._add_entry(form, r, "Date Range", "date", 2)
         r += 1
         self._add_entry(form, r, "Title contains", "title", 0)
         self._add_entry(form, r, "Guest contains", "guest", 2)
@@ -348,7 +430,9 @@ class SAWLExplorer(tk.Tk):
         grammar = (
             'Within a field: adjacency = AND, "+" or AND = AND, "|" or OR = OR.\n'
             'Use double quotes for phrases: "hello there" | "fake news".\n'
-            'AND binds tighter than OR. Between fields: default AND. Blank = ANY.'
+            'Episode Range accepts: E0153-E0297, E0153 - E0297, 123-297.\n'
+            'Date accepts: YYYY, YYYY-MM, YYYY-MM-DD, or YYYY-MM-DD to YYYY-MM-DD.\n'
+            'Ranges require full dates on both sides. AND binds tighter than OR. Blank = ANY.'
         )
 
         ttk.Label(
@@ -400,9 +484,21 @@ class SAWLExplorer(tk.Tk):
         where_parts: list[str] = []
         params: list[str] = []
 
+        episode_expr = (self.vars["episode_id"].get() or "").strip()
+        if episode_expr:
+            clause, p = compile_episode_expr(episode_expr)
+            if clause:
+                where_parts.append(clause)
+                params.extend(p)
+
+        date_expr = (self.vars["date"].get() or "").strip()
+        if date_expr:
+            clause, p = compile_date_expr(date_expr)
+            if clause:
+                where_parts.append(clause)
+                params.extend(p)        
+
         text_map = {
-            "episode_id": "episode_id",
-            "date": "date",
             "title": "title",
             "summary_narrative": "summary_narrative",
             "summary_compact": "summary_compact_json",
